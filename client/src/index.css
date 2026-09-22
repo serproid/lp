@@ -779,79 +779,105 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 
 /* Super Admin */
 .byd-admin-login { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #111211; }
-.byd-admin-login-card { width: min(100%, 380px); display: grid; gap: 14px; padding: 40px 34px; background: #fff; text-align: center; }
+.byd-admin-login-card { width: min(100%, 380px); display: grid; gap: 14px; padding: 36px 26px; background: #fff; text-align: center; }
 .byd-admin-login-icon { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto; border-radius: 50%; background: #f4f4f4; color: #c7192e; }
-.byd-admin-login-card h1 { margin: 0; font-size: 26px; font-weight: 700; }
+.byd-admin-login-card h1 { margin: 0; font-size: 24px; font-weight: 700; }
 .byd-admin-login-card p { margin: 0 0 8px; color: #666; font-size: 14px; }
 .byd-admin-login-card label { display: grid; gap: 8px; text-align: left; color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .byd-admin-login-card input { padding: 12px 0; border: 0; border-bottom: 1px solid #cfcfcf; background: transparent; font-size: 15px; outline: 0; }
 .byd-admin-login-card button { margin-top: 10px; min-height: 46px; background: #c7192e; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
 .byd-admin-login-card button:hover { background: #a5132a; }
+.byd-admin-login-card button:disabled { opacity: .6; cursor: not-allowed; }
 
 .byd-admin { min-height: 100vh; background: #f4f4f2; }
 .byd-admin-bar { position: sticky; top: 0; z-index: 10; background: #1c1c1c; color: #fff; }
-.byd-admin-bar-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; max-width: 1440px; margin: 0 auto; padding: 16px 32px; }
-.byd-admin-brand { display: flex; align-items: center; gap: 14px; }
+.byd-admin-bar-inner { display: flex; flex-direction: column; gap: 12px; max-width: 1440px; margin: 0 auto; padding: 14px 16px; }
+.byd-admin-brand { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .byd-admin-badge { padding: 4px 10px; background: #c7192e; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.byd-admin-brand strong { font-size: 16px; }
+.byd-admin-brand strong { font-size: 15px; }
 .byd-admin-count { color: #9a9a9a; font-size: 12px; }
-.byd-admin-bar-actions { display: flex; align-items: center; gap: 10px; }
-.byd-admin-bar-actions button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.byd-admin-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.byd-admin-nav::-webkit-scrollbar { display: none; }
+.byd-admin-tab { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; padding: 10px 14px; border: 1px solid rgba(255,255,255,.25); color: #d5d5d5; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; text-decoration: none; white-space: nowrap; transition: background .16s ease, border-color .16s ease; }
+.byd-admin-tab:hover { background: rgba(255,255,255,.1); }
+.byd-admin-tab.is-active { background: #c7192e; border-color: #c7192e; color: #fff; }
+.byd-admin-bar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.byd-admin-bar-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 1 auto; padding: 11px 14px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.byd-admin-bar-actions button:disabled { opacity: .6; cursor: not-allowed; }
 .byd-admin-save { background: #c7192e; color: #fff; }
 .byd-admin-save:hover { background: #a5132a; }
 .byd-admin-ghost { border: 1px solid rgba(255,255,255,.3); color: #fff; }
 .byd-admin-ghost:hover { background: rgba(255,255,255,.1); }
-.byd-admin-body { max-width: 1200px; margin: 0 auto; padding: 28px 32px 80px; }
-.byd-admin-app { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 26px; padding: 20px 22px; background: #fff; border: 1px solid #ececec; }
+.byd-admin-body { max-width: 1200px; margin: 0 auto; padding: 18px 16px 70px; }
+
+.byd-admin-app { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; padding: 18px; background: #fff; border: 1px solid #ececec; }
 .byd-admin-app-copy strong { display: block; font-size: 15px; }
-.byd-admin-app-copy p { max-width: 560px; margin: 4px 0 0; color: #777; font-size: 13px; line-height: 1.5; }
-.byd-admin-app-row { display: flex; gap: 10px; flex: 1 1 320px; }
-.byd-admin-app-row input { flex: 1 1 auto; min-width: 0; padding: 11px 12px; border: 1px solid #d5d5d5; font-size: 14px; outline: 0; }
-.byd-admin-app-row input:focus { border-color: #c7192e; }
-.byd-admin-search { display: flex; align-items: center; gap: 10px; max-width: 420px; margin-bottom: 22px; padding: 12px 16px; background: #fff; border: 1px solid #e2e2e2; }
+.byd-admin-app-copy p { margin: 4px 0 0; color: #777; font-size: 13px; line-height: 1.5; }
+.byd-admin-app-grid { display: grid; gap: 12px; }
+.byd-admin-app-form { display: flex; flex-direction: column; gap: 10px; }
+.byd-admin-app-form input, .byd-admin-app-form select { width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid #d5d5d5; background: #fff; font-size: 14px; outline: 0; }
+.byd-admin-app-form input:focus, .byd-admin-app-form select:focus { border-color: #c7192e; }
+.byd-admin-app-form button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+.byd-admin-app-form button:disabled { opacity: .6; cursor: not-allowed; }
+.byd-admin-file { padding: 8px 10px; }
+.byd-admin-ghost-dark { border: 1px solid #d5d5d5; color: #333; }
+.byd-admin-ghost-dark:hover { background: #f2f2f2; }
+.byd-admin-app-active { display: flex; align-items: flex-start; gap: 8px; margin: 14px 0 0; color: #1e7a3d; font-size: 13px; word-break: break-all; }
+.byd-admin-app-active a { color: #1e7a3d; text-decoration: underline; }
+.byd-admin-releases { display: grid; gap: 8px; margin-top: 14px; }
+.byd-admin-release { display: grid; gap: 10px; padding: 12px 14px; background: #fafafa; border: 1px solid #ececec; }
+.byd-admin-release-info strong { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; text-transform: capitalize; }
+.byd-admin-release-info small { display: block; margin-top: 2px; color: #8a8a8a; font-size: 12px; word-break: break-all; }
+.byd-admin-pill { padding: 2px 8px; background: #e6f4ea; color: #1e7a3d; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.byd-admin-release-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.byd-admin-release-actions a, .byd-admin-release-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1 1 auto; padding: 9px 12px; border: 1px solid #d5d5d5; background: #fff; color: #333; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; text-decoration: none; }
+.byd-admin-release-actions a:hover, .byd-admin-release-actions button:hover { background: #f2f2f2; }
+.byd-admin-danger { color: #c7192e !important; border-color: #e7b8bf !important; }
+.byd-admin-danger:hover { background: #fdf0f1 !important; }
+
+.byd-admin-search { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 18px; padding: 12px 14px; background: #fff; border: 1px solid #e2e2e2; }
 .byd-admin-search input { width: 100%; border: 0; outline: 0; font-size: 14px; }
-.byd-admin-table { display: grid; gap: 8px; }
-.byd-admin-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; gap: 16px; padding: 12px 16px; background: #fff; border: 1px solid #ececec; }
-.byd-admin-row-head { padding-top: 0; padding-bottom: 4px; background: transparent; border: 0; color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.byd-admin-table { display: grid; gap: 10px; }
+.byd-admin-row { display: grid; gap: 12px; padding: 14px; background: #fff; border: 1px solid #ececec; }
+.byd-admin-row-head { display: none; }
 .byd-admin-model { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .byd-admin-model img { flex: 0 0 auto; width: 72px; height: 48px; object-fit: cover; background: #e2e2e2; }
 .byd-admin-model strong { display: block; font-size: 14px; }
 .byd-admin-model small { color: #8a8a8a; font-size: 12px; }
 .byd-admin-segment { color: #555; font-size: 13px; }
-.byd-admin-row input { width: 100%; padding: 10px 12px; border: 1px solid #d5d5d5; font-size: 14px; outline: 0; }
+.byd-admin-price { display: grid; gap: 5px; min-width: 0; }
+.byd-admin-price-label { color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.byd-admin-row input { width: 100%; padding: 11px 12px; border: 1px solid #d5d5d5; font-size: 14px; outline: 0; }
 .byd-admin-row input:focus { border-color: #c7192e; }
 .byd-admin-empty { padding: 30px; color: #777; text-align: center; }
-@media (max-width: 760px) {
-  .byd-admin-bar-inner { padding: 14px 18px; }
-  .byd-admin-body { padding: 20px 16px 60px; }
-  .byd-admin-row { grid-template-columns: 1fr 1fr; }
-  .byd-admin-row-head { display: none; }
-  .byd-admin-model { grid-column: 1 / -1; }
-}
 
 .byd-admin-spin { animation: byd-admin-spin 1s linear infinite; }
 @keyframes byd-admin-spin { to { transform: rotate(360deg); } }
-.byd-admin-app-grid { display: grid; gap: 10px; flex: 1 1 420px; }
-.byd-admin-app-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.byd-admin-app-form input, .byd-admin-app-form select { flex: 1 1 160px; min-width: 0; padding: 11px 12px; border: 1px solid #d5d5d5; background: #fff; font-size: 14px; outline: 0; }
-.byd-admin-app-form input:focus, .byd-admin-app-form select:focus { border-color: #c7192e; }
-.byd-admin-app-form button { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-.byd-admin-app-form button:disabled { opacity: .6; cursor: not-allowed; }
-.byd-admin-file { flex: 1 1 220px; padding: 8px 10px; }
-.byd-admin-ghost-dark { border: 1px solid #d5d5d5; color: #333; }
-.byd-admin-ghost-dark:hover { background: #f2f2f2; }
-.byd-admin-app-active { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; margin: 12px 0 0; color: #1e7a3d; font-size: 13px; word-break: break-all; }
-.byd-admin-app-active a { color: #1e7a3d; text-decoration: underline; }
-.byd-admin-releases { flex: 1 1 100%; display: grid; gap: 8px; margin-top: 14px; }
-.byd-admin-release { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #fafafa; border: 1px solid #ececec; }
-.byd-admin-release-info strong { display: flex; align-items: center; gap: 8px; font-size: 14px; text-transform: capitalize; }
-.byd-admin-release-info small { display: block; margin-top: 2px; color: #8a8a8a; font-size: 12px; word-break: break-all; }
-.byd-admin-pill { padding: 2px 8px; background: #e6f4ea; color: #1e7a3d; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.byd-admin-release-actions { display: flex; align-items: center; gap: 8px; }
-.byd-admin-release-actions a, .byd-admin-release-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid #d5d5d5; background: #fff; color: #333; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; text-decoration: none; }
-.byd-admin-release-actions a:hover, .byd-admin-release-actions button:hover { background: #f2f2f2; }
-.byd-admin-danger { color: #c7192e !important; border-color: #e7b8bf !important; }
-.byd-admin-danger:hover { background: #fdf0f1 !important; }
+
+@media (min-width: 700px) {
+  .byd-admin-app-form { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .byd-admin-app-form input, .byd-admin-app-form select { flex: 1 1 160px; width: auto; }
+  .byd-admin-app-form button { width: auto; }
+  .byd-admin-release { grid-template-columns: 1fr auto; align-items: center; }
+  .byd-admin-release-actions { justify-content: flex-end; }
+  .byd-admin-release-actions a, .byd-admin-release-actions button { flex: 0 0 auto; }
+  .byd-admin-search { max-width: 420px; }
+}
+@media (min-width: 760px) {
+  .byd-admin-table { gap: 8px; }
+  .byd-admin-row { grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; gap: 16px; padding: 12px 16px; }
+  .byd-admin-row-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; align-items: center; gap: 16px; padding: 0 16px 4px; background: transparent; border: 0; color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .byd-admin-price-label { display: none; }
+}
+@media (min-width: 900px) {
+  .byd-admin-bar-inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 32px; }
+  .byd-admin-nav { overflow: visible; }
+  .byd-admin-bar-actions button { flex: 0 0 auto; }
+  .byd-admin-body { padding: 28px 32px 80px; }
+  .byd-admin-app { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 22px; }
+  .byd-admin-app-grid { flex: 1 1 420px; }
+  .byd-admin-app-active, .byd-admin-releases { flex: 1 1 100%; }
+}
 
 
 /* Simulator page */
@@ -928,21 +954,36 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 
 
 /* Admin leads */
-.byd-admin-leads { margin-top: 38px; }
-.byd-admin-section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 14px; color: #171717; font-size: 18px; font-weight: 700; }
-.byd-admin-section-title span { color: #8a8a8a; font-size: 13px; font-weight: 500; }
-.byd-admin-lead { display: grid; grid-template-columns: 1.6fr 1.4fr 1.2fr 1fr auto; align-items: center; gap: 16px; padding: 14px 16px; background: #fff; border: 1px solid #ececec; }
-.byd-admin-lead-head { padding-top: 0; padding-bottom: 4px; background: transparent; border: 0; color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.byd-admin-lead strong { display: block; font-size: 14px; }
-.byd-admin-lead small { display: block; margin-top: 2px; color: #8a8a8a; font-size: 12px; word-break: break-word; }
-.byd-admin-lead-model { color: #c7192e; font-size: 13px; font-weight: 700; }
-.byd-admin-lead select { padding: 8px 10px; border: 1px solid #d5d5d5; background: #fff; font-size: 13px; text-transform: capitalize; outline: 0; }
-.byd-admin-lead select:focus { border-color: #c7192e; }
-.byd-admin-lead-actions { display: flex; justify-content: flex-end; gap: 8px; }
-.byd-admin-lead-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid #d5d5d5; background: #fff; color: #333; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
-.byd-admin-lead-actions button:hover { background: #f2f2f2; }
-@media (max-width: 900px) {
-  .byd-admin-lead { grid-template-columns: 1fr 1fr; }
-  .byd-admin-lead-head { display: none; }
-  .byd-admin-lead-actions { justify-content: flex-start; }
+.byd-admin-leads-toolbar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.byd-admin-filter { width: 100%; padding: 12px 14px; border: 1px solid #e2e2e2; background: #fff; font-size: 14px; outline: 0; }
+.byd-admin-filter:focus { border-color: #c7192e; }
+.byd-admin-leads-list { display: grid; gap: 12px; }
+.byd-admin-lead-card { display: grid; gap: 14px; padding: 16px; background: #fff; border: 1px solid #ececec; }
+.byd-admin-lead-card > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.byd-admin-lead-card > header strong { display: block; font-size: 16px; }
+.byd-admin-lead-card > header small { color: #8a8a8a; font-size: 12px; }
+.byd-admin-status { flex: 0 0 auto; padding: 4px 10px; background: #f0f0f0; color: #555; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.byd-admin-status.is-novo { background: #e7f0fd; color: #1d5fbf; }
+.byd-admin-status.is-em_contato { background: #fff4e0; color: #a56a00; }
+.byd-admin-status.is-convertido { background: #e6f4ea; color: #1e7a3d; }
+.byd-admin-status.is-descartado { background: #f2f2f2; color: #8a8a8a; }
+.byd-admin-lead-grid { display: grid; gap: 12px; }
+.byd-admin-lead-grid > div { display: grid; gap: 3px; min-width: 0; }
+.byd-admin-lead-grid span { color: #8a8a8a; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.byd-admin-lead-grid strong { font-size: 14px; font-weight: 600; word-break: break-word; }
+.byd-admin-lead-details { margin: 0; padding: 12px 14px; background: #fafafa; border: 1px solid #f0f0f0; color: #555; font-size: 13px; line-height: 1.5; }
+.byd-admin-lead-card > footer { display: flex; flex-wrap: wrap; gap: 8px; }
+.byd-admin-lead-card > footer a, .byd-admin-lead-card > footer button, .byd-admin-lead-card > footer select { display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1 1 auto; padding: 10px 14px; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; text-decoration: none; }
+.byd-admin-lead-card > footer a { background: #25d366; border: 1px solid #25d366; color: #fff; }
+.byd-admin-lead-card > footer a:hover { background: #1ebe5b; }
+.byd-admin-lead-card > footer select { border: 1px solid #d5d5d5; background: #fff; color: #333; text-transform: capitalize; }
+.byd-admin-lead-card > footer select:focus { border-color: #c7192e; }
+.byd-admin-lead-card > footer button { border: 1px solid #d5d5d5; background: #fff; color: #333; }
+.byd-admin-lead-card > footer button:hover { background: #f2f2f2; }
+@media (min-width: 700px) {
+  .byd-admin-leads-toolbar { flex-direction: row; align-items: center; }
+  .byd-admin-leads-toolbar .byd-admin-search { margin-bottom: 0; }
+  .byd-admin-filter { width: auto; min-width: 200px; }
+  .byd-admin-lead-grid { grid-template-columns: repeat(3, 1fr); }
+  .byd-admin-lead-card > footer a, .byd-admin-lead-card > footer button, .byd-admin-lead-card > footer select { flex: 0 0 auto; }
 }
