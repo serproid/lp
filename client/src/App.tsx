@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Models from "./pages/Models";
 import Offers from "./pages/Offers";
+import Admin from "./pages/Admin";
 import TestDrive from "./pages/TestDrive";
 import { Subscription, Technology } from "./pages/ServicePages";
 
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/tecnologia" component={Technology} />
       <Route path="/test-drive" component={TestDrive} />
       <Route path="/aluguel-byd-mais" component={Subscription} />
+      <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

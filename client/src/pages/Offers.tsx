@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
 import { offers, offerCitiesByState, offerSegments, offerSeries, offerStates } from "@/lib/offersData";
+import { brl, usePriceOverrides } from "@/lib/priceStore";
 
 function FilterSelect({ label, placeholder, options, value, onChange, disabled }: { label: string; placeholder: string; options: string[]; value: string; onChange: (value: string) => void; disabled?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,7 @@ export default function Offers() {
   const [model, setModel] = useState("");
   const [segment, setSegment] = useState("");
   const [filtersOpen, setFiltersOpen] = useState(true);
+  const overrides = usePriceOverrides();
 
   const cityOptions = state ? offerCitiesByState[state] ?? [] : [];
 
@@ -91,8 +93,12 @@ export default function Offers() {
           </div>
 
           <div className="byd-offer-cards">
-            {filtered.map((offer, index) => (
-              <article className="byd-offer-card" key={`${offer.model}-${offer.segment}-${index}`}>
+            {filtered.map((offer) => {
+              const override = overrides[offer.id];
+              const crm = override?.crmPrice ?? offer.crmPrice;
+              const por = override?.discountPrice !== undefined ? override.discountPrice : offer.discountPrice;
+              return (
+              <article className="byd-offer-card" key={offer.id}>
                 <div className="byd-offer-media">
                   {offer.segment && offer.segment !== "Todos" ? <span className="byd-offer-segment">{offer.segment}</span> : null}
                   <img src={offer.image} alt={offer.model} loading="lazy" />
@@ -105,12 +111,12 @@ export default function Offers() {
                   <div className="byd-offer-prices">
                     <div className="byd-offer-price">
                       <span className="byd-offer-price-label">De</span>
-                      <strong>{offer.de}</strong>
+                      <strong>{brl(crm)}</strong>
                     </div>
-                    {offer.por ? (
+                    {por !== null ? (
                       <div className="byd-offer-price is-highlight">
                         <span className="byd-offer-price-label">Por</span>
-                        <strong>{offer.por}</strong>
+                        <strong>{brl(por)}</strong>
                       </div>
                     ) : null}
                   </div>
@@ -124,7 +130,8 @@ export default function Offers() {
                   </div>
                 </div>
               </article>
-            ))}
+              );
+            })}
             {filtered.length === 0 && <p className="byd-offer-empty">Nenhuma oferta encontrada para os filtros selecionados.</p>}
           </div>
         </div>
