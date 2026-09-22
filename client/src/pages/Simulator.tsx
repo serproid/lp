@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useSearch } from "wouter";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
-import { resolveAppUrl, useAppConfig } from "@/lib/appStore";
+import { resolveAppUrl, useActiveApp } from "@/lib/appStore";
 
 const downPaymentChips = [
   { label: "Sem entrada", value: 0 },
@@ -27,8 +27,8 @@ export default function Simulator() {
   const search = useSearch();
   const model = new URLSearchParams(search).get("modelo") || "";
 
-  const appConfig = useAppConfig();
-  const appUrl = resolveAppUrl(appConfig);
+  const appRelease = useActiveApp();
+  const appUrl = resolveAppUrl(appRelease);
 
   const [buyType, setBuyType] = useState<"new" | "trade">("new");
   const [downPayment, setDownPayment] = useState(30000);

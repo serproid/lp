@@ -829,6 +829,30 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
   .byd-admin-model { grid-column: 1 / -1; }
 }
 
+.byd-admin-spin { animation: byd-admin-spin 1s linear infinite; }
+@keyframes byd-admin-spin { to { transform: rotate(360deg); } }
+.byd-admin-app-grid { display: grid; gap: 10px; flex: 1 1 420px; }
+.byd-admin-app-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.byd-admin-app-form input, .byd-admin-app-form select { flex: 1 1 160px; min-width: 0; padding: 11px 12px; border: 1px solid #d5d5d5; background: #fff; font-size: 14px; outline: 0; }
+.byd-admin-app-form input:focus, .byd-admin-app-form select:focus { border-color: #c7192e; }
+.byd-admin-app-form button { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+.byd-admin-app-form button:disabled { opacity: .6; cursor: not-allowed; }
+.byd-admin-file { flex: 1 1 220px; padding: 8px 10px; }
+.byd-admin-ghost-dark { border: 1px solid #d5d5d5; color: #333; }
+.byd-admin-ghost-dark:hover { background: #f2f2f2; }
+.byd-admin-app-active { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; margin: 12px 0 0; color: #1e7a3d; font-size: 13px; word-break: break-all; }
+.byd-admin-app-active a { color: #1e7a3d; text-decoration: underline; }
+.byd-admin-releases { flex: 1 1 100%; display: grid; gap: 8px; margin-top: 14px; }
+.byd-admin-release { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #fafafa; border: 1px solid #ececec; }
+.byd-admin-release-info strong { display: flex; align-items: center; gap: 8px; font-size: 14px; text-transform: capitalize; }
+.byd-admin-release-info small { display: block; margin-top: 2px; color: #8a8a8a; font-size: 12px; word-break: break-all; }
+.byd-admin-pill { padding: 2px 8px; background: #e6f4ea; color: #1e7a3d; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.byd-admin-release-actions { display: flex; align-items: center; gap: 8px; }
+.byd-admin-release-actions a, .byd-admin-release-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid #d5d5d5; background: #fff; color: #333; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; text-decoration: none; }
+.byd-admin-release-actions a:hover, .byd-admin-release-actions button:hover { background: #f2f2f2; }
+.byd-admin-danger { color: #c7192e !important; border-color: #e7b8bf !important; }
+.byd-admin-danger:hover { background: #fdf0f1 !important; }
+
 
 /* Simulator page */
 .byd-sim-page { padding-top: 105px; background: #fff; }

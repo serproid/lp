@@ -1,12 +1,27 @@
-import { useMemo, useState, type FormEvent } from "react";
-import { Lock, LogOut, RotateCcw, Save, Search } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { CheckCircle2, ExternalLink, FileUp, Loader2, Lock, LogOut, RotateCcw, Save, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { offers } from "@/lib/offersData";
-import { getAppConfig, saveAppConfig } from "@/lib/appStore";
-import { clearOverrides, getOverrides, saveOverrides, type PriceOverrides } from "@/lib/priceStore";
-
-const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "byd2026";
-const AUTH_KEY = "byd:admin-auth";
+import { supabase } from "@/lib/supabase";
+import {
+  deleteRelease,
+  listReleases,
+  resolveAppUrl,
+  saveAppLink,
+  setActiveRelease,
+  uploadApp,
+  type AppPlatform,
+  type AppRelease,
+} from "@/lib/appStore";
+import {
+  clearOverrides,
+  fetchOverrides,
+  getOverrides,
+  removeOverrides,
+  saveOverrides,
+  type PriceOverrides,
+} from "@/lib/priceStore";
 
 type DraftRow = { crmPrice: string; discountPrice: string };
 type Draft = Record<string, DraftRow>;
@@ -23,31 +38,99 @@ function buildDraft(): Draft {
   return draft;
 }
 
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function formatBytes(bytes: number | null) {
+  if (!bytes) return "";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = bytes;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return `${value.toFixed(value >= 10 || unit === 0 ? 0 : 1)} ${units[unit]}`;
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+}
+
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === "1");
+  const [session, setSession] = useState<Session | null>(null);
+  const [checking, setChecking] = useState(true);
+  const [email, setEmail] = useState("admin@buy.com");
   const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<Draft>(() => buildDraft());
-  const [appUrl, setAppUrl] = useState(() => getAppConfig().downloadUrl);
+  const [savingPrices, setSavingPrices] = useState(false);
+
+  const [releases, setReleases] = useState<AppRelease[]>([]);
+  const [platform, setPlatform] = useState<AppPlatform>("android");
+  const [version, setVersion] = useState("");
+  const [notes, setNotes] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const refreshReleases = useCallback(async () => {
+    try {
+      setReleases(await listReleases());
+    } catch (error) {
+      toast(`Erro ao carregar apps: ${errorMessage(error)}`);
+    }
+  }, []);
+
+  const reloadPrices = useCallback(async () => {
+    try {
+      await fetchOverrides();
+      setDraft(buildDraft());
+    } catch {
+      /* mantém o cache local */
+    }
+  }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setChecking(false);
+    });
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+    });
+    return () => subscription.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!session) return;
+    reloadPrices();
+    refreshReleases();
+  }, [session, reloadPrices, refreshReleases]);
 
   const filtered = useMemo(
     () => offers.filter((offer) => `${offer.model} ${offer.series} ${offer.segment}`.toLowerCase().includes(query.toLowerCase())),
     [query],
   );
 
-  const login = (event: FormEvent<HTMLFormElement>) => {
+  const login = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(AUTH_KEY, "1");
-      setAuthed(true);
-    } else {
-      toast("Senha incorreta.");
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    setBusy(false);
+    if (error) {
+      toast(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message);
+      return;
     }
+    setPassword("");
   };
 
-  const logout = () => {
-    sessionStorage.removeItem(AUTH_KEY);
-    setAuthed(false);
+  const logout = async () => {
+    await supabase.auth.signOut();
     setPassword("");
   };
 
@@ -55,42 +138,147 @@ export default function Admin() {
     setDraft((current) => ({ ...current, [id]: { ...current[id], [field]: value } }));
   };
 
-  const save = () => {
-    const overrides: PriceOverrides = {};
+  const save = async () => {
+    const current = getOverrides();
+    const toUpsert: PriceOverrides = {};
+    const toRemove: string[] = [];
+
     offers.forEach((offer) => {
       const row = draft[offer.id];
+      if (!row) return;
       const crm = Number(row.crmPrice);
       const por = row.discountPrice.trim() === "" ? null : Number(row.discountPrice);
-      if (crm !== offer.crmPrice || por !== offer.discountPrice) {
-        overrides[offer.id] = { crmPrice: crm, discountPrice: por };
+      if (!Number.isFinite(crm) || crm < 0) return;
+      const changed = crm !== offer.crmPrice || por !== offer.discountPrice;
+      if (changed) {
+        toUpsert[offer.id] = { crmPrice: crm, discountPrice: por };
+      } else if (current[offer.id]) {
+        toRemove.push(offer.id);
       }
     });
-    saveOverrides(overrides);
-    toast(`${Object.keys(overrides).length} preço(s) atualizado(s).`);
+
+    setSavingPrices(true);
+    try {
+      if (toRemove.length > 0) await removeOverrides(toRemove);
+      await saveOverrides(toUpsert);
+      setDraft(buildDraft());
+      const total = Object.keys(toUpsert).length + toRemove.length;
+      toast(`${total} preço(s) atualizado(s).`);
+    } catch (error) {
+      toast(`Erro ao salvar: ${errorMessage(error)}`);
+    } finally {
+      setSavingPrices(false);
+    }
   };
 
-  const reset = () => {
-    clearOverrides();
-    setDraft(buildDraft());
-    toast("Preços restaurados para o valor original.");
+  const reset = async () => {
+    try {
+      await clearOverrides();
+      setDraft(buildDraft());
+      toast("Preços restaurados para o valor original.");
+    } catch (error) {
+      toast(`Erro ao restaurar: ${errorMessage(error)}`);
+    }
   };
 
-  if (!authed) {
+  const clearFile = () => {
+    setFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      toast("Selecione o arquivo do app.");
+      return;
+    }
+    setUploading(true);
+    try {
+      await uploadApp(file, { platform, version: version.trim(), notes: notes.trim() });
+      clearFile();
+      setVersion("");
+      setNotes("");
+      await refreshReleases();
+      toast("App enviado e publicado.");
+    } catch (error) {
+      toast(`Erro no upload: ${errorMessage(error)}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSaveLink = async () => {
+    if (!linkUrl.trim()) {
+      toast("Informe a URL do app.");
+      return;
+    }
+    setUploading(true);
+    try {
+      await saveAppLink({ platform, version: version.trim(), url: linkUrl.trim(), notes: notes.trim() });
+      setLinkUrl("");
+      setVersion("");
+      setNotes("");
+      await refreshReleases();
+      toast("Link do app publicado.");
+    } catch (error) {
+      toast(`Erro ao salvar link: ${errorMessage(error)}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleActivate = async (id: string) => {
+    try {
+      await setActiveRelease(id);
+      await refreshReleases();
+      toast("Release ativo atualizado.");
+    } catch (error) {
+      toast(`Erro ao ativar: ${errorMessage(error)}`);
+    }
+  };
+
+  const handleDelete = async (release: AppRelease) => {
+    try {
+      await deleteRelease(release);
+      await refreshReleases();
+      toast("Release removido.");
+    } catch (error) {
+      toast(`Erro ao remover: ${errorMessage(error)}`);
+    }
+  };
+
+  if (checking) {
+    return (
+      <main className="byd-admin-login">
+        <div className="byd-admin-login-card">
+          <Loader2 className="byd-admin-spin" size={24} />
+        </div>
+      </main>
+    );
+  }
+
+  if (!session) {
     return (
       <main className="byd-admin-login">
         <form className="byd-admin-login-card" onSubmit={login}>
           <span className="byd-admin-login-icon"><Lock size={22} /></span>
           <h1>Super Admin</h1>
-          <p>Acesso restrito ao gerenciamento de preços BYD.</p>
+          <p>Acesso restrito ao gerenciamento de preços e do app BYD.</p>
+          <label>
+            E-mail
+            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="admin@buy.com" autoComplete="username" autoFocus required />
+          </label>
           <label>
             Senha
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Digite a senha" autoFocus />
+            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Digite a senha" autoComplete="current-password" required />
           </label>
-          <button type="submit">Entrar</button>
+          <button type="submit" disabled={busy}>{busy ? "Entrando..." : "Entrar"}</button>
         </form>
       </main>
     );
   }
+
+  const activeRelease = releases.find((release) => release.isActive) ?? null;
+  const activeUrl = resolveAppUrl(activeRelease);
 
   return (
     <main className="byd-admin">
@@ -98,28 +286,80 @@ export default function Admin() {
         <div className="byd-admin-bar-inner">
           <div className="byd-admin-brand">
             <span className="byd-admin-badge">Super Admin</span>
-            <strong>Gerenciar preços</strong>
+            <strong>Gerenciar preços e app</strong>
             <span className="byd-admin-count">{offers.length} ofertas</span>
           </div>
           <div className="byd-admin-bar-actions">
             <button type="button" className="byd-admin-ghost" onClick={reset}><RotateCcw size={15} /> Restaurar</button>
-            <button type="button" className="byd-admin-save" onClick={save}><Save size={15} /> Salvar preços</button>
+            <button type="button" className="byd-admin-save" onClick={save} disabled={savingPrices}><Save size={15} /> {savingPrices ? "Salvando..." : "Salvar preços"}</button>
             <button type="button" className="byd-admin-ghost" onClick={logout}><LogOut size={15} /> Sair</button>
           </div>
         </div>
       </header>
 
       <div className="byd-admin-body">
-        <div className="byd-admin-app">
+        <section className="byd-admin-app">
           <div className="byd-admin-app-copy">
-            <strong>App BYD — link de download</strong>
-            <p>Cole o link (Android/iOS). Os botões "Baixar app e simular agora" e "Ver opções disponíveis" da simulação usam este link.</p>
+            <strong>App BYD — arquivo para download</strong>
+            <p>Envie o arquivo (.apk/.ipa) ou informe um link. O release ativo é usado nos botões de download da simulação.</p>
           </div>
-          <div className="byd-admin-app-row">
-            <input value={appUrl} onChange={(event) => setAppUrl(event.target.value)} placeholder="https://..." />
-            <button type="button" className="byd-admin-save" onClick={() => { saveAppConfig({ downloadUrl: appUrl.trim() }); toast("Link do app salvo."); }}><Save size={15} /> Salvar link</button>
+
+          <div className="byd-admin-app-grid">
+            <div className="byd-admin-app-form">
+              <select value={platform} onChange={(event) => setPlatform(event.target.value as AppPlatform)}>
+                <option value="android">Android</option>
+                <option value="ios">iOS</option>
+                <option value="web">Web</option>
+              </select>
+              <input type="text" value={version} onChange={(event) => setVersion(event.target.value)} placeholder="Versão (ex: 1.2.0)" />
+              <input type="text" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Observações (opcional)" />
+            </div>
+
+            <div className="byd-admin-app-form">
+              <input ref={fileInputRef} className="byd-admin-file" type="file" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
+              <button type="button" className="byd-admin-save" onClick={handleUpload} disabled={uploading}>
+                {uploading ? <Loader2 className="byd-admin-spin" size={15} /> : <FileUp size={15} />} Enviar app
+              </button>
+            </div>
+
+            <div className="byd-admin-app-form">
+              <input type="text" value={linkUrl} onChange={(event) => setLinkUrl(event.target.value)} placeholder="Ou cole um link (Play Store / App Store)" />
+              <button type="button" className="byd-admin-ghost byd-admin-ghost-dark" onClick={handleSaveLink} disabled={uploading}><ExternalLink size={15} /> Publicar link</button>
+            </div>
           </div>
-        </div>
+
+          {activeUrl ? (
+            <p className="byd-admin-app-active">
+              <CheckCircle2 size={15} /> Link ativo: <a href={activeUrl} target="_blank" rel="noreferrer">{activeUrl}</a>
+            </p>
+          ) : null}
+
+          <div className="byd-admin-releases">
+            {releases.length === 0 ? (
+              <p className="byd-admin-empty">Nenhum app publicado ainda.</p>
+            ) : (
+              releases.map((release) => (
+                <div className="byd-admin-release" key={release.id}>
+                  <div className="byd-admin-release-info">
+                    <strong>
+                      {release.platform}{release.version ? ` · v${release.version}` : ""}
+                      {release.isActive ? <span className="byd-admin-pill">Ativo</span> : null}
+                    </strong>
+                    <small>
+                      {release.fileName ?? release.downloadUrl ?? "—"}
+                      {release.fileSize ? ` · ${formatBytes(release.fileSize)}` : ""} · {formatDate(release.createdAt)}
+                    </small>
+                  </div>
+                  <div className="byd-admin-release-actions">
+                    {resolveAppUrl(release) ? <a href={resolveAppUrl(release)} target="_blank" rel="noreferrer">Abrir</a> : null}
+                    {!release.isActive ? <button type="button" onClick={() => handleActivate(release.id)}>Ativar</button> : null}
+                    <button type="button" className="byd-admin-danger" onClick={() => handleDelete(release)}><Trash2 size={14} /> Excluir</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
 
         <label className="byd-admin-search">
           <Search size={16} />
