@@ -188,12 +188,23 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [utilityHidden, setUtilityHidden] = useState(false);
   const [modelsOpen, setModelsOpen] = useState(false);
   const [modelsTab, setModelsTab] = useState<"electric" | "hybrid">("electric");
   const modelsCloseTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+      if (y < 40) {
+        setUtilityHidden(false);
+      } else if (Math.abs(y - lastY) > 4) {
+        setUtilityHidden(y > lastY);
+      }
+      lastY = y;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -217,7 +228,7 @@ export default function Home() {
 
   return (
     <main className="site-shell byd-home">
-      <header className={`site-header byd-header ${scrolled ? "is-scrolled" : ""}`}>
+      <header className={`site-header byd-header ${scrolled ? "is-scrolled" : ""} ${utilityHidden ? "is-utility-hidden" : ""}`}>
         <div className="byd-utility-bar">
           <div className="byd-utility-inner">
             <button aria-label="Buscar" onClick={() => showSoon("A busca será disponibilizada em breve.")}><Search size={16} /></button>
@@ -249,7 +260,7 @@ export default function Home() {
 
       {modelsOpen && (
         <div
-          className="byd-models-menu"
+          className={`byd-models-menu ${utilityHidden ? "is-utility-hidden" : ""}`}
           onMouseEnter={openModels}
           onMouseLeave={closeModels}
           role="dialog"
@@ -289,7 +300,7 @@ export default function Home() {
       )}
 
       {menuOpen && (
-        <div className="byd-menu-panel" role="dialog" aria-label="Menu principal">
+        <div className={`byd-menu-panel ${utilityHidden ? "is-utility-hidden" : ""}`} role="dialog" aria-label="Menu principal">
           <div className="container byd-menu-inner">
             <div className="byd-menu-heading">
               <span className="menu-kicker">Menu</span>
