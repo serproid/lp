@@ -3,87 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
-
-type Offer = {
-  model: string;
-  year: string;
-  segment: string;
-  image: string;
-  bullets: string[];
-  de: string;
-  entrada: string;
-  por: string;
-  parcelas: string;
-  parcelaValor: string;
-  taxa: string;
-  validade: string;
-};
-
-type Model = {
-  name: string;
-  image: string;
-  price: number;
-  bullet: string;
-  segments: string[];
-};
-
-const brl = (value: number) => `R$ ${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
-
-const segmentConfig: Record<string, { discount: number; term: number; taxa: string; bullet: string }> = {
-  "Promocional": { discount: 0.06, term: 48, taxa: "0,49", bullet: "Condições especiais por tempo limitado" },
-  "PCD": { discount: 0.08, term: 60, taxa: "0,59", bullet: "Isenções de IPI, ICMS e IPVA para PCD" },
-  "Taxista": { discount: 0.07, term: 48, taxa: "0,49", bullet: "Condição exclusiva para taxistas e motoristas de app" },
-  "Pessoa Jurídica": { discount: 0.05, term: 60, taxa: "0,69", bullet: "Condição especial para CNPJ" },
-};
-
-const models: Model[] = [
-  { name: "BYD DOLPHIN MINI", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/small-pic.png", price: 118800, bullet: "Autonomia de até 280 km", segments: ["Promocional", "PCD", "Taxista", "Pessoa Jurídica"] },
-  { name: "BYD DOLPHIN", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/dolphin-header-update.png", price: 149800, bullet: "Autonomia de até 405 km", segments: ["Promocional", "PCD", "Taxista"] },
-  { name: "BYD DOLPHIN PLUS", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/dolphin/dolphin-platform-a-header.png", price: 179800, bullet: "Autonomia de até 490 km", segments: ["Promocional", "PCD", "Pessoa Jurídica"] },
-  { name: "BYD DOLPHIN SE", image: "https://www.byd.com/material/byd-site/br/product/dolphin-se/menu-dolphin-se-4.png", price: 139800, bullet: "Autonomia de até 405 km", segments: ["Promocional", "Taxista", "PCD"] },
-  { name: "BYD HAN", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/han/han-black.png", price: 539800, bullet: "Sedan premium 100% elétrico", segments: ["Promocional", "Pessoa Jurídica"] },
-  { name: "BYD SEAL", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/seal/seal_glacier_blue.png", price: 299800, bullet: "0 a 100 km/h em 3,8s", segments: ["Promocional", "Pessoa Jurídica"] },
-  { name: "BYD SEALION 7", image: "https://www.byd.com/material/byd-site/br/product/sealion/imagens/header/Sealion7-header.webp", price: 269800, bullet: "Autonomia de até 440 km", segments: ["Promocional", "Pessoa Jurídica", "PCD"] },
-  { name: "BYD TAN", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/new-tan-grey-header.png", price: 289800, bullet: "SUV 7 lugares 100% elétrico", segments: ["Promocional", "PCD"] },
-  { name: "BYD YUAN PLUS", image: "https://www.byd.com/material/byd-site/br/product/yuan-plus-ev-br/yuanplus-2026/yuan-2026/menu_yuan-plus-2026-2.png", price: 249800, bullet: "Autonomia de até 458 km", segments: ["Promocional", "PCD", "Taxista"] },
-  { name: "BYD YUAN PRO", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/header-yuanpro.png", price: 199800, bullet: "Autonomia de até 420 km", segments: ["Promocional", "PCD"] },
-  { name: "BYD ATTO 2 DM-i", image: "https://www.byd.com/material/byd-site/br/product/atto-2-dmi/atto2-header.webp", price: 119800, bullet: "Autonomia combinada de 1.000 km", segments: ["Promocional", "PCD", "Taxista", "Pessoa Jurídica"] },
-  { name: "BYD ATTO 8", image: "https://www.byd.com/material/byd-site/br/atto-8/New_Atto_8_header_2.png", price: 229800, bullet: "SUV híbrido 7 lugares", segments: ["Promocional", "Pessoa Jurídica"] },
-  { name: "BYD KING DM-i", image: "https://www.byd.com/material/byd-site/br/product/king/king-Header1.png", price: 175800, bullet: "Autonomia combinada de 1.200 km", segments: ["Promocional", "Taxista", "PCD"] },
-  { name: "BYD SHARK", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/Header-BYD-SHARK.png", price: 379800, bullet: "Picape híbrida 4x4", segments: ["Promocional", "Pessoa Jurídica"] },
-  { name: "BYD SONG PLUS DM-i", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/Header-BYD-SONG-PLUS.png", price: 239800, bullet: "Autonomia combinada de 1.200 km", segments: ["Promocional", "PCD", "Taxista"] },
-  { name: "BYD SONG PLUS PREMIUM DM-i", image: "https://www.byd.com/material/byd-site/america-public/header-product-image/New_Song_Plus_Header.png", price: 259800, bullet: "Autonomia combinada de 1.200 km", segments: ["Promocional", "Pessoa Jurídica"] },
-  { name: "BYD SONG PRO DM-i FLEX", image: "https://www.byd.com/material/__CN/byd-site/br/product/songpro-flex/byd-song-pro-flex-HEADER-3.png", price: 159800, bullet: "Autonomia combinada de 1.105 km", segments: ["Promocional", "Taxista", "PCD", "Pessoa Jurídica"] },
-];
-
-const offers: Offer[] = [];
-models.forEach((model) => {
-  model.segments.forEach((segment) => {
-    const config = segmentConfig[segment];
-    const por = Math.round((model.price * (1 - config.discount)) / 100) * 100;
-    const entrada = Math.round((model.price * 0.2) / 100) * 100;
-    const parcela = Math.round((por * 0.92) / config.term);
-    offers.push({
-      model: model.name,
-      year: "2026",
-      segment,
-      image: model.image,
-      bullets: [model.bullet, config.bullet],
-      de: brl(model.price),
-      entrada: brl(entrada),
-      por: brl(por),
-      parcelas: String(config.term),
-      parcelaValor: brl(parcela),
-      taxa: config.taxa,
-      validade: "30/09/2026",
-    });
-  });
-});
-
-const stateOptions = ["Acre", "Alagoas", "Bahia", "Ceará", "Distrito Federal", "Goiás", "Minas Gerais", "Paraná", "Pernambuco", "Rio de Janeiro", "Rio Grande do Sul", "Santa Catarina", "São Paulo"];
-const cityOptions = ["São Paulo", "Campinas", "Rio de Janeiro", "Belo Horizonte", "Curitiba", "Porto Alegre", "Salvador", "Recife"];
-const modelOptions = Array.from(new Set(offers.map((offer) => offer.model)));
-const segmentOptions = ["Promocional", "PCD", "Taxista", "Pessoa Jurídica"];
+import { offers, offerCitiesByState, offerSegments, offerSeries, offerStates } from "@/lib/offersData";
 
 function FilterSelect({ label, placeholder, options, value, onChange, disabled }: { label: string; placeholder: string; options: string[]; value: string; onChange: (value: string) => void; disabled?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -122,8 +42,10 @@ export default function Offers() {
   const [model, setModel] = useState("");
   const [segment, setSegment] = useState("");
 
+  const cityOptions = state ? offerCitiesByState[state] ?? [] : [];
+
   const filtered = useMemo(
-    () => offers.filter((offer) => (!model || offer.model === model) && (!segment || offer.segment === segment)),
+    () => offers.filter((offer) => (!model || offer.series === model) && (!segment || offer.segment === segment)),
     [model, segment],
   );
 
@@ -147,10 +69,10 @@ export default function Offers() {
           <h1 className="byd-offer-title">Ofertas BYD</h1>
           <p className="byd-offer-subtitle">Escolha sua oferta</p>
           <div className="byd-offer-filters">
-            <FilterSelect label="Estado" placeholder="Todos os estados" options={stateOptions} value={state} onChange={setState} />
+            <FilterSelect label="Estado" placeholder="Todos os estados" options={offerStates} value={state} onChange={(value) => { setState(value); setCity(""); }} />
             <FilterSelect label="Cidade" placeholder="Selecione a cidade" options={cityOptions} value={city} onChange={setCity} disabled={!state} />
-            <FilterSelect label="Modelo" placeholder="Selecione um modelo" options={modelOptions} value={model} onChange={setModel} />
-            <FilterSelect label="Segmento" placeholder="Selecione um segmento" options={segmentOptions} value={segment} onChange={setSegment} />
+            <FilterSelect label="Modelo" placeholder="Selecione um modelo" options={offerSeries} value={model} onChange={setModel} />
+            <FilterSelect label="Segmento" placeholder="Selecione um segmento" options={offerSegments} value={segment} onChange={setSegment} />
           </div>
         </aside>
 
@@ -161,10 +83,10 @@ export default function Offers() {
           </div>
 
           <div className="byd-offer-cards">
-            {filtered.map((offer) => (
-              <article className="byd-offer-card" key={`${offer.model}-${offer.segment}`}>
+            {filtered.map((offer, index) => (
+              <article className="byd-offer-card" key={`${offer.model}-${offer.segment}-${index}`}>
                 <div className="byd-offer-media">
-                  {offer.segment ? <span className="byd-offer-segment">{offer.segment}</span> : null}
+                  {offer.segment && offer.segment !== "Todos" ? <span className="byd-offer-segment">{offer.segment}</span> : null}
                   <img src={offer.image} alt={offer.model} loading="lazy" />
                 </div>
                 <div className="byd-offer-info">
@@ -177,16 +99,13 @@ export default function Offers() {
                       <span className="byd-offer-price-label">De</span>
                       <strong>{offer.de}</strong>
                     </div>
-                    <div className="byd-offer-price">
-                      <span className="byd-offer-price-label">Entrada de</span>
-                      <strong>{offer.entrada}</strong>
-                    </div>
-                    <div className="byd-offer-price is-highlight">
-                      <span className="byd-offer-price-label">Por</span>
-                      <strong>{offer.por}</strong>
-                    </div>
+                    {offer.por ? (
+                      <div className="byd-offer-price is-highlight">
+                        <span className="byd-offer-price-label">Por</span>
+                        <strong>{offer.por}</strong>
+                      </div>
+                    ) : null}
                   </div>
-                  <p className="byd-offer-term">{offer.parcelas} Parcelas de <strong>{offer.parcelaValor}</strong> <span>Taxa: {offer.taxa}% A.M.</span></p>
                   <div className="byd-offer-validity">
                     <span>Oferta válida até {offer.validade}</span>
                     <button type="button" onClick={() => toast(`Condições do ${offer.model} em breve.`)}>Consulte condições</button>
