@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useSearch } from "wouter";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
+import { resolveAppUrl, useAppConfig } from "@/lib/appStore";
 
 const downPaymentChips = [
   { label: "Sem entrada", value: 0 },
@@ -26,13 +27,20 @@ export default function Simulator() {
   const search = useSearch();
   const model = new URLSearchParams(search).get("modelo") || "";
 
+  const appConfig = useAppConfig();
+  const appUrl = resolveAppUrl(appConfig);
+
   const [buyType, setBuyType] = useState<"new" | "trade">("new");
   const [downPayment, setDownPayment] = useState(30000);
   const [tradeValue, setTradeValue] = useState("");
   const [otherTrade, setOtherTrade] = useState("");
 
-  const submit = () => {
-    toast("Simulação enviada. Em breve você verá as opções disponíveis.");
+  const handleApp = () => {
+    if (appUrl) {
+      window.open(appUrl, "_blank", "noopener,noreferrer");
+    } else {
+      toast("O download do app estará disponível em breve.");
+    }
   };
 
   return (
@@ -133,7 +141,7 @@ export default function Simulator() {
         )}
 
         <div className="byd-sim-submit-wrap">
-          <button type="button" className="byd-sim-submit" onClick={submit}>Ver opções disponíveis <ArrowRight size={16} /></button>
+          <button type="button" className="byd-sim-submit" onClick={handleApp}>Ver opções disponíveis <ArrowRight size={16} /></button>
         </div>
       </section>
 
@@ -144,9 +152,9 @@ export default function Simulator() {
             <h2>Simule pelo aplicativo</h2>
             <p>É rápido, seguro e você pode fazer a simulação pelo celular. Consulte as condições disponíveis, informe os dados necessários e acompanhe sua simulação de forma prática.</p>
           </div>
-          <a className="byd-sim-app-btn" href="#" onClick={(event) => { event.preventDefault(); toast("Download do app em breve."); }}>
+          <button type="button" className="byd-sim-app-btn" onClick={handleApp}>
             Baixar app e simular agora <ArrowRight size={16} />
-          </a>
+          </button>
         </div>
       </section>
 

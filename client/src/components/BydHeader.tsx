@@ -37,10 +37,16 @@ const techMenu = [
 ];
 
 const menuColumns = [
-  { title: "Descubra a BYD", links: ["Modelos", "Tecnologia", "Ofertas", "Test Drive", "BYD por assinatura"] },
-  { title: "Precisa de ajuda?", links: ["Concessionários", "Assistência técnica", "Fale conosco", "Perguntas frequentes"] },
-  { title: "Mundo BYD", links: ["Sobre a BYD", "BYD Design", "Metaverso BYD", "Sustentabilidade"] },
+  { title: "A empresa", links: ["Sobre a BYD", "Notícias", "Sustentabilidade"] },
+  { title: "Atendimento ao cliente", links: ["Central de Relacionamento com Cliente", "Perguntas Frequentes (CRC)"] },
+  { title: "Vendas", links: ["Ofertas", "Vendas PCD", "Condições Comerciais", "Calculadora de Economia", "BYD DiLink"] },
+  { title: "Pós-vendas", links: ["Serviço de Manutenção", "Chave digital", "BYD Assistance", "Regulamento Raízen", "Legislação e Segurança", "Blindagem certificada"] },
 ];
+
+const menuSolutions = {
+  title: "Mais soluções",
+  links: ["Energia Solar", "Caminhões", "Carregadores Veiculares", "Chassis de Ônibus", "Empilhadeiras"],
+};
 
 export default function BydHeader({ isHome = false }: { isHome?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -209,11 +215,6 @@ export default function BydHeader({ isHome = false }: { isHome?: boolean }) {
       {menuOpen && (
         <div className={`byd-menu-panel ${utilityHidden ? "is-utility-hidden" : ""}`} role="dialog" aria-label="Menu principal">
           <div className="container byd-menu-inner">
-            <div className="byd-menu-heading">
-              <span className="menu-kicker">Menu</span>
-              <h2>Explore a BYD</h2>
-              <p>Descubra uma nova experiência em mobilidade, tecnologia e design.</p>
-            </div>
             <div className="byd-menu-columns">
               {menuColumns.map((column) => (
                 <div className="byd-menu-column" key={column.title}>
@@ -224,6 +225,14 @@ export default function BydHeader({ isHome = false }: { isHome?: boolean }) {
                     </a>
                   ))}
                 </div>
+              ))}
+            </div>
+            <div className="byd-menu-column byd-menu-solutions">
+              <span>{menuSolutions.title}</span>
+              {menuSolutions.links.map((link) => (
+                <a href={menuLinkHref(link)} onClick={closeMenu} key={link}>
+                  {link}<ArrowRight size={16} />
+                </a>
               ))}
             </div>
           </div>

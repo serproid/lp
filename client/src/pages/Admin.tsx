@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { Lock, LogOut, RotateCcw, Save, Search } from "lucide-react";
 import { toast } from "sonner";
 import { offers } from "@/lib/offersData";
+import { getAppConfig, saveAppConfig } from "@/lib/appStore";
 import { clearOverrides, getOverrides, saveOverrides, type PriceOverrides } from "@/lib/priceStore";
 
 const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD as string) || "byd2026";
@@ -27,6 +28,7 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState<Draft>(() => buildDraft());
+  const [appUrl, setAppUrl] = useState(() => getAppConfig().downloadUrl);
 
   const filtered = useMemo(
     () => offers.filter((offer) => `${offer.model} ${offer.series} ${offer.segment}`.toLowerCase().includes(query.toLowerCase())),
@@ -108,6 +110,17 @@ export default function Admin() {
       </header>
 
       <div className="byd-admin-body">
+        <div className="byd-admin-app">
+          <div className="byd-admin-app-copy">
+            <strong>App BYD — link de download</strong>
+            <p>Cole o link (Android/iOS). Os botões "Baixar app e simular agora" e "Ver opções disponíveis" da simulação usam este link.</p>
+          </div>
+          <div className="byd-admin-app-row">
+            <input value={appUrl} onChange={(event) => setAppUrl(event.target.value)} placeholder="https://..." />
+            <button type="button" className="byd-admin-save" onClick={() => { saveAppConfig({ downloadUrl: appUrl.trim() }); toast("Link do app salvo."); }}><Save size={15} /> Salvar link</button>
+          </div>
+        </div>
+
         <label className="byd-admin-search">
           <Search size={16} />
           <input placeholder="Buscar por modelo, série ou segmento" value={query} onChange={(event) => setQuery(event.target.value)} />
