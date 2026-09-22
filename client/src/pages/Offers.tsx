@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
@@ -41,6 +41,7 @@ export default function Offers() {
   const [city, setCity] = useState("");
   const [model, setModel] = useState("");
   const [segment, setSegment] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(true);
 
   const cityOptions = state ? offerCitiesByState[state] ?? [] : [];
 
@@ -64,15 +65,22 @@ export default function Offers() {
         </a>
       </section>
 
-      <section className="container byd-offer-layout">
+      <section className={`container byd-offer-layout ${filtersOpen ? "" : "is-collapsed"}`}>
         <aside className="byd-offer-sidebar">
-          <h1 className="byd-offer-title">Ofertas BYD</h1>
-          <p className="byd-offer-subtitle">Escolha sua oferta</p>
-          <div className="byd-offer-filters">
-            <FilterSelect label="Estado" placeholder="Todos os estados" options={offerStates} value={state} onChange={(value) => { setState(value); setCity(""); }} />
-            <FilterSelect label="Cidade" placeholder="Selecione a cidade" options={cityOptions} value={city} onChange={setCity} disabled={!state} />
-            <FilterSelect label="Modelo" placeholder="Selecione um modelo" options={offerSeries} value={model} onChange={setModel} />
-            <FilterSelect label="Segmento" placeholder="Selecione um segmento" options={offerSegments} value={segment} onChange={setSegment} />
+          <button type="button" className="byd-offer-filters-toggle" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen}>
+            <SlidersHorizontal size={16} />
+            <span>Filtros</span>
+            <ChevronDown size={16} className={filtersOpen ? "rotate" : ""} />
+          </button>
+          <div className="byd-offer-sidebar-body">
+            <h1 className="byd-offer-title">Ofertas BYD</h1>
+            <p className="byd-offer-subtitle">Escolha sua oferta</p>
+            <div className="byd-offer-filters">
+              <FilterSelect label="Estado" placeholder="Todos os estados" options={offerStates} value={state} onChange={(value) => { setState(value); setCity(""); }} />
+              <FilterSelect label="Cidade" placeholder="Selecione a cidade" options={cityOptions} value={city} onChange={setCity} disabled={!state} />
+              <FilterSelect label="Modelo" placeholder="Selecione um modelo" options={offerSeries} value={model} onChange={setModel} />
+              <FilterSelect label="Segmento" placeholder="Selecione um segmento" options={offerSegments} value={segment} onChange={setSegment} />
+            </div>
           </div>
         </aside>
 
