@@ -5,6 +5,7 @@ import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
 import { offers, offerCitiesByState, offerSegments, offerSeries, offerStates } from "@/lib/offersData";
 import { brl, usePriceOverrides } from "@/lib/priceStore";
+import { whatsappInterest } from "@/lib/whatsapp";
 
 function FilterSelect({ label, placeholder, options, value, onChange, disabled }: { label: string; placeholder: string; options: string[]; value: string; onChange: (value: string) => void; disabled?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -125,8 +126,8 @@ export default function Offers() {
                     <button type="button" onClick={() => toast(`Condições do ${offer.model} em breve.`)}>Consulte condições</button>
                   </div>
                   <div className="byd-offer-actions">
-                    <a className="byd-offer-btn" href={`/simulacao?modelo=${encodeURIComponent(`${offer.model} ${offer.year}`)}`}>Estou interessado</a>
-                    <a className="byd-offer-whatsapp" href="https://wa.me/551140028922" target="_blank" rel="noreferrer" aria-label={`WhatsApp ${offer.model}`}><WhatsAppIcon /></a>
+                    <a className="byd-offer-btn" href={`/simulacao?modelo=${encodeURIComponent(`${offer.model} ${offer.year}`)}&id=${encodeURIComponent(offer.id)}`}>Estou interessado</a>
+                    <a className="byd-offer-whatsapp" href={whatsappInterest(`${offer.model} ${offer.year}`)} target="_blank" rel="noreferrer" aria-label={`WhatsApp ${offer.model}`}><WhatsAppIcon /></a>
                   </div>
                 </div>
               </article>

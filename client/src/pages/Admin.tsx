@@ -15,6 +15,7 @@ import {
   type AppRelease,
 } from "@/lib/appStore";
 import {
+  brl,
   clearOverrides,
   fetchOverrides,
   getOverrides,
@@ -22,6 +23,13 @@ import {
   saveOverrides,
   type PriceOverrides,
 } from "@/lib/priceStore";
+import {
+  deleteLead,
+  listLeads,
+  setLeadStatus,
+  type Lead,
+  type LeadStatus,
+} from "@/lib/leadStore";
 
 type DraftRow = { crmPrice: string; discountPrice: string };
 type Draft = Record<string, DraftRow>;
@@ -33,9 +41,19 @@ function buildDraft(): Draft {
     const override = overrides[offer.id];
     const crm = override?.crmPrice ?? offer.crmPrice;
     const por = override?.discountPrice !== undefined ? override.discountPrice : offer.discountPrice;
-    draft[offer.id] = { crmPrice: String(crm), discountPrice: por === null ? "" : String(por) };
+    draft[offer.id] = { crmPrice: brl(crm), discountPrice: por === null ? "" : brl(por) };
   });
   return draft;
+}
+
+function currencyDigitsToValue(value: string): number {
+  const digits = value.replace(/\D/g, "");
+  return digits ? Number(digits) / 100 : 0;
+}
+
+function parseCurrency(value: string): number | null {
+  const digits = value.replace(/\D/g, "");
+  return digits ? Number(digits) / 100 : null;
 }
 
 function errorMessage(error: unknown) {
@@ -69,6 +87,9 @@ export default function Admin() {
   const [draft, setDraft] = useState<Draft>(() => buildDraft());
   const [savingPrices, setSavingPrices] = useState(false);
 
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loadingLeads, setLoadingLeads] = useState(false);
+
   const [releases, setReleases] = useState<AppRelease[]>([]);
   const [platform, setPlatform] = useState<AppPlatform>("android");
   const [version, setVersion] = useState("");
@@ -83,6 +104,17 @@ export default function Admin() {
       setReleases(await listReleases());
     } catch (error) {
       toast(`Erro ao carregar apps: ${errorMessage(error)}`);
+    }
+  }, []);
+
+  const refreshLeads = useCallback(async () => {
+    setLoadingLeads(true);
+    try {
+      setLeads(await listLeads());
+    } catch (error) {
+      toast(`Erro ao carregar leads: ${errorMessage(error)}`);
+    } finally {
+      setLoadingLeads(false);
     }
   }, []);
 
@@ -110,7 +142,8 @@ export default function Admin() {
     if (!session) return;
     reloadPrices();
     refreshReleases();
-  }, [session, reloadPrices, refreshReleases]);
+    refreshLeads();
+  }, [session, reloadPrices, refreshReleases, refreshLeads]);
 
   const filtered = useMemo(
     () => offers.filter((offer) => `${offer.model} ${offer.series} ${offer.segment}`.toLowerCase().includes(query.toLowerCase())),
@@ -135,7 +168,9 @@ export default function Admin() {
   };
 
   const update = (id: string, field: keyof DraftRow, value: string) => {
-    setDraft((current) => ({ ...current, [id]: { ...current[id], [field]: value } }));
+    const digits = value.replace(/\D/g, "");
+    const formatted = digits ? brl(currencyDigitsToValue(value)) : "";
+    setDraft((current) => ({ ...current, [id]: { ...current[id], [field]: formatted } }));
   };
 
   const save = async () => {
@@ -146,9 +181,9 @@ export default function Admin() {
     offers.forEach((offer) => {
       const row = draft[offer.id];
       if (!row) return;
-      const crm = Number(row.crmPrice);
-      const por = row.discountPrice.trim() === "" ? null : Number(row.discountPrice);
-      if (!Number.isFinite(crm) || crm < 0) return;
+      const crm = parseCurrency(row.crmPrice);
+      const por = row.discountPrice.trim() === "" ? null : parseCurrency(row.discountPrice);
+      if (crm === null || !Number.isFinite(crm) || crm < 0) return;
       const changed = crm !== offer.crmPrice || por !== offer.discountPrice;
       if (changed) {
         toUpsert[offer.id] = { crmPrice: crm, discountPrice: por };
@@ -243,6 +278,25 @@ export default function Admin() {
       toast("Release removido.");
     } catch (error) {
       toast(`Erro ao remover: ${errorMessage(error)}`);
+    }
+  };
+
+  const handleLeadStatus = async (lead: Lead, status: LeadStatus) => {
+    try {
+      await setLeadStatus(lead.id, status);
+      setLeads((current) => current.map((item) => (item.id === lead.id ? { ...item, status } : item)));
+    } catch (error) {
+      toast(`Erro ao atualizar lead: ${errorMessage(error)}`);
+    }
+  };
+
+  const handleLeadDelete = async (lead: Lead) => {
+    try {
+      await deleteLead(lead.id);
+      setLeads((current) => current.filter((item) => item.id !== lead.id));
+      toast("Lead removido.");
+    } catch (error) {
+      toast(`Erro ao remover lead: ${errorMessage(error)}`);
     }
   };
 
@@ -384,16 +438,14 @@ export default function Admin() {
               </div>
               <span className="byd-admin-segment">{offer.segment}</span>
               <input
-                type="number"
-                step="100"
-                min="0"
+                type="text"
+                inputMode="numeric"
                 value={draft[offer.id]?.crmPrice ?? ""}
                 onChange={(event) => update(offer.id, "crmPrice", event.target.value)}
               />
               <input
-                type="number"
-                step="100"
-                min="0"
+                type="text"
+                inputMode="numeric"
                 placeholder="sem desconto"
                 value={draft[offer.id]?.discountPrice ?? ""}
                 onChange={(event) => update(offer.id, "discountPrice", event.target.value)}
@@ -402,6 +454,52 @@ export default function Admin() {
           ))}
           {filtered.length === 0 && <p className="byd-admin-empty">Nenhuma oferta encontrada.</p>}
         </div>
+
+        <section className="byd-admin-leads">
+          <h2 className="byd-admin-section-title">Leads — Oferta Selecionada <span>{leads.length} lead(s)</span></h2>
+          {loadingLeads ? (
+            <p className="byd-admin-empty"><Loader2 className="byd-admin-spin" size={18} /></p>
+          ) : leads.length === 0 ? (
+            <p className="byd-admin-empty">Nenhum lead recebido ainda.</p>
+          ) : (
+            <div className="byd-admin-table">
+              <div className="byd-admin-lead byd-admin-lead-head">
+                <span>Contato</span>
+                <span>Telefone / E-mail</span>
+                <span>Modelo</span>
+                <span>Local</span>
+                <span>Status</span>
+              </div>
+              {leads.map((lead) => (
+                <div className="byd-admin-lead" key={lead.id}>
+                  <div>
+                    <strong>{lead.firstName} {lead.lastName}</strong>
+                    <small>{lead.personType === "fisica" ? "CPF" : "CNPJ"} {lead.document} · {formatDate(lead.createdAt)}</small>
+                  </div>
+                  <div>
+                    <small>{lead.phone}</small>
+                    <small>{lead.email}</small>
+                  </div>
+                  <span className="byd-admin-lead-model">{lead.model ?? "—"}</span>
+                  <div>
+                    <small>{[lead.city, lead.state].filter(Boolean).join(" / ") || "—"}</small>
+                    {lead.cep ? <small>CEP {lead.cep}</small> : null}
+                    {lead.details ? <small>{lead.details}</small> : null}
+                  </div>
+                  <div className="byd-admin-lead-actions">
+                    <select value={lead.status} onChange={(event) => handleLeadStatus(lead, event.target.value as LeadStatus)}>
+                      <option value="novo">Novo</option>
+                      <option value="em_contato">Em contato</option>
+                      <option value="convertido">Convertido</option>
+                      <option value="descartado">Descartado</option>
+                    </select>
+                    <button type="button" className="byd-admin-danger" onClick={() => handleLeadDelete(lead)}><Trash2 size={14} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </main>
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowRight, Smartphone } from "lucide-react";
 import { toast } from "sonner";
-import { useSearch } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
 import { resolveAppUrl, useActiveApp } from "@/lib/appStore";
@@ -25,7 +25,10 @@ const tradeChips = [
 
 export default function Simulator() {
   const search = useSearch();
-  const model = new URLSearchParams(search).get("modelo") || "";
+  const [, navigate] = useLocation();
+  const params = new URLSearchParams(search);
+  const model = params.get("modelo") || "";
+  const offerId = params.get("id") || "";
 
   const appRelease = useActiveApp();
   const appUrl = resolveAppUrl(appRelease);
@@ -41,6 +44,14 @@ export default function Simulator() {
     } else {
       toast("O download do app estará disponível em breve.");
     }
+  };
+
+  const goToOffer = () => {
+    const next = new URLSearchParams();
+    if (offerId) next.set("id", offerId);
+    if (model) next.set("modelo", model);
+    const query = next.toString();
+    navigate(`/oferta-selecionada${query ? `?${query}` : ""}`);
   };
 
   return (
@@ -141,7 +152,7 @@ export default function Simulator() {
         )}
 
         <div className="byd-sim-submit-wrap">
-          <button type="button" className="byd-sim-submit" onClick={handleApp}>Ver opções disponíveis <ArrowRight size={16} /></button>
+          <button type="button" className="byd-sim-submit" onClick={goToOffer}>Ver opções disponíveis <ArrowRight size={16} /></button>
         </div>
       </section>
 
