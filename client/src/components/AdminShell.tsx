@@ -1,11 +1,11 @@
 import { useState, type FormEvent, type ReactNode } from "react";
-import { LayoutDashboard, Loader2, Lock, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, Loader2, Lock, LogOut, Smartphone, Users } from "lucide-react";
 import { Link } from "wouter";
 import type { AdminSession } from "@/lib/useAdminSession";
 
 type AdminShellProps = {
   auth: AdminSession;
-  active: "prices" | "leads";
+  active: "prices" | "app" | "leads";
   title: string;
   meta?: string;
   actions?: ReactNode;
@@ -62,7 +62,8 @@ export default function AdminShell({ auth, active, title, meta, actions, childre
             {meta ? <span className="byd-admin-count">{meta}</span> : null}
           </div>
           <nav className="byd-admin-nav" aria-label="Seções do painel">
-            <Link href="/admin" className={`byd-admin-tab ${active === "prices" ? "is-active" : ""}`}><LayoutDashboard size={16} /> Preços e app</Link>
+            <Link href="/admin" className={`byd-admin-tab ${active === "prices" ? "is-active" : ""}`}><LayoutDashboard size={16} /> Preços</Link>
+            <Link href="/admin/app" className={`byd-admin-tab ${active === "app" ? "is-active" : ""}`}><Smartphone size={16} /> App</Link>
             <Link href="/admin/leads" className={`byd-admin-tab ${active === "leads" ? "is-active" : ""}`}><Users size={16} /> Leads</Link>
           </nav>
           <div className="byd-admin-bar-actions">

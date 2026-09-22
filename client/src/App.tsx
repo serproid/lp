@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Models from "./pages/Models";
 import Offers from "./pages/Offers";
 import Admin from "./pages/Admin";
+import AdminApp from "./pages/AdminApp";
 import AdminLeads from "./pages/AdminLeads";
 import Simulator from "./pages/Simulator";
 import OfertaSelecionada from "./pages/OfertaSelecionada";
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/simulacao" component={Simulator} />
       <Route path="/oferta-selecionada" component={OfertaSelecionada} />
       <Route path="/admin" component={Admin} />
+      <Route path="/admin/app" component={AdminApp} />
       <Route path="/admin/leads" component={AdminLeads} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
