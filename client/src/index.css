@@ -212,7 +212,10 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 }
 
 /* Brazilian subpages */
-.subpage-shell { min-height: 100vh; background: var(--mist); color: var(--ink); }
+.subpage-shell { min-height: 100vh; padding-top: 105px; background: var(--mist); color: var(--ink); }
+@media (max-width: 860px) {
+  .subpage-shell { padding-top: 76px; }
+}
 .subpage-header { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; background: #fff; color: var(--ink); border-bottom: 1px solid #e0e1dc; }
 .subpage-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
 .subpage-header nav { display: flex; align-items: center; gap: 30px; margin-left: auto; margin-right: 54px; }
@@ -225,10 +228,10 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .offers-hero-copy, .models-page-hero .container, .tech-page-hero .container, .form-page-hero .container, .subscription-hero .container { width: min(1280px, 100%); padding: 70px 48px; margin: 0 auto; }
 .offers-hero h1, .models-page-hero h1, .tech-page-hero h1, .form-page-hero h1, .subscription-hero h1 { margin-bottom: 22px; font-size: clamp(62px, 8vw, 110px); line-height: .86; }
 .offers-hero-copy > p:last-child, .models-page-hero .container > p:last-child, .tech-page-hero .container > p:last-child, .subscription-hero .container > p:last-child { max-width: 360px; margin: 0; color: rgba(255,255,255,.73); font-size: 15px; line-height: 1.6; }
-.models-page-hero { min-height: 500px; background: url('/manus-storage/atto2_81dc1a55.webp') center/cover; }
-.tech-page-hero { min-height: 500px; background: url('/manus-storage/byd-inspired-vision_1177b520.jpg') center/cover; background-position: center 42%; }
-.form-page-hero { min-height: 410px; background: url('/manus-storage/hero_16bac73b.webp') center/cover; }
-.subscription-hero { min-height: 500px; background: url('/manus-storage/atto2_81dc1a55.webp') center/cover; }
+.models-page-hero { min-height: 500px; background: url('https://www.byd.com/material/__CN/byd-site/br/product/songpro-flex/kv-banner-home.webp') center/cover; }
+.tech-page-hero { min-height: 500px; background: url('https://www.byd.com/material/byd-site/br/tecnologia/Super_DM-i-1.jpg') center/cover; background-position: center 42%; }
+.form-page-hero { min-height: 410px; background: url('https://www.byd.com/material/byd-site/br/product/atto-2-dmi/kv-banner-home-pc2.webp') center/cover; }
+.subscription-hero { min-height: 500px; background: url('https://www.byd.com/material/byd-site/br/product/atto-2-dmi/kv-banner-home-pc2.webp') center/cover; }
 .offers-content, .models-list, .technology-pillars, .form-page-section, .subscription-section { padding-top: 104px; padding-bottom: 112px; }
 .offers-title-row, .subpage-title, .form-page-section, .subscription-section { display: flex; justify-content: space-between; align-items: end; gap: 50px; }
 .offers-title-row { align-items: end; margin-bottom: 50px; }
@@ -723,4 +726,37 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 @media (max-width: 700px) {
   .byd-offer-card { grid-template-columns: 1fr; gap: 18px; padding: 20px; }
   .byd-offer-prices { flex-wrap: wrap; gap: 22px; }
+}
+
+
+/* Test Drive page */
+.byd-td-page { padding-top: 105px; background: #fff; }
+.byd-td-banner img { display: block; width: 100%; height: auto; }
+.byd-td-body { max-width: 780px; margin: 0 auto; padding: 70px 24px 100px; }
+.byd-td-form { display: grid; gap: 24px; }
+.byd-td-title { margin: 0 0 6px; color: #171717; font-size: 34px; font-weight: 700; }
+.byd-td-field { display: grid; gap: 9px; min-width: 0; }
+.byd-td-field > label { color: #8a8a8a; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.byd-td-form input, .byd-td-form select, .byd-td-form textarea { width: 100%; padding: 12px 0; border: 0; border-bottom: 1px solid #cfcfcf; border-radius: 0; background: transparent; color: #202020; font-size: 15px; letter-spacing: 0; outline: 0; resize: vertical; }
+.byd-td-form input::placeholder, .byd-td-form textarea::placeholder { color: #9a9a9a; }
+.byd-td-form input:focus, .byd-td-form select:focus, .byd-td-form textarea:focus { border-color: #202020; }
+.byd-td-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.byd-td-phone { display: grid; grid-template-columns: auto 90px 1fr; align-items: center; gap: 16px; }
+.byd-td-phone-country { color: #202020; font-size: 15px; white-space: nowrap; }
+.byd-td-tip { margin: 0; color: #8a8a8a; font-size: 12px; line-height: 1.6; }
+.byd-td-check { display: flex; align-items: flex-start; gap: 12px; color: #555; font-size: 13px; line-height: 1.5; }
+.byd-td-check input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; }
+.byd-td-check a { color: #c7192e; text-decoration: underline; }
+.byd-td-submit { justify-self: start; min-height: 48px; padding: 0 40px; background: #c7192e; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background .18s ease; }
+.byd-td-submit:hover { background: #a5132a; }
+@media (max-width: 860px) {
+  .byd-td-page { padding-top: 76px; }
+}
+@media (max-width: 600px) {
+  .byd-td-body { padding: 46px 20px 70px; }
+  .byd-td-title { font-size: 26px; }
+  .byd-td-row { grid-template-columns: 1fr; gap: 24px; }
+  .byd-td-phone { grid-template-columns: auto 1fr; }
+  .byd-td-phone input { grid-column: 1 / -1; }
+  .byd-td-submit { justify-self: stretch; }
 }

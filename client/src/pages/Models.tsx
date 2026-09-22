@@ -1,9 +1,43 @@
 import { ArrowRight, BatteryCharging, Zap } from "lucide-react";
 import { toast } from "sonner";
+import BydHeader from "@/components/BydHeader";
+import BydFooter from "@/components/BydFooter";
 import { vehicles } from "@/lib/siteData";
 
 export default function Models() {
-  return <main className="subpage-shell"><Header /><section className="models-page-hero"><div className="container"><p className="eyebrow light-eyebrow"><span /> A linha BYD</p><h1>Encontre o seu<br /><em>próximo carro.</em></h1><p>Design marcante, tecnologia inteligente e uma experiência elétrica feita para o Brasil.</p></div></section><section className="models-list container"><div className="subpage-title"><div><p className="eyebrow"><span /> Modelos</p><h2>Uma linha para<br /><em>cada caminho.</em></h2></div><p>Escolha entre SUVs, sedans, compactos e picapes com a tecnologia BYD.</p></div><div className="models-grid">{vehicles.map((vehicle) => <article className="model-card" key={vehicle.name}><div className="model-card-image"><img src={vehicle.image} alt={vehicle.name} /></div><div className="model-card-copy"><p>{vehicle.category}</p><h3>{vehicle.name}</h3><div><span><BatteryCharging size={15} /> {vehicle.range}</span><span><Zap size={15} /> Elétrico / híbrido</span></div><button onClick={() => toast(`Detalhes do ${vehicle.name} em breve`)}>Saiba mais <ArrowRight size={16} /></button></div></article>)}</div></section><Footer /></main>;
+  return (
+    <main className="site-shell byd-home subpage-shell">
+      <BydHeader />
+      <section className="models-page-hero">
+        <div className="container">
+          <p className="eyebrow light-eyebrow"><span /> A linha BYD</p>
+          <h1>Encontre o seu<br /><em>próximo carro.</em></h1>
+          <p>Design marcante, tecnologia inteligente e uma experiência elétrica feita para o Brasil.</p>
+        </div>
+      </section>
+      <section className="models-list container">
+        <div className="subpage-title">
+          <div><p className="eyebrow"><span /> Modelos</p><h2>Uma linha para<br /><em>cada caminho.</em></h2></div>
+          <p>Escolha entre SUVs, sedans, compactos e picapes com a tecnologia BYD.</p>
+        </div>
+        <div className="models-grid">
+          {vehicles.map((vehicle) => (
+            <article className="model-card" key={vehicle.name}>
+              <div className="model-card-image"><img src={vehicle.image} alt={vehicle.name} /></div>
+              <div className="model-card-copy">
+                <p>{vehicle.category}</p>
+                <h3>{vehicle.name}</h3>
+                <div>
+                  <span><BatteryCharging size={15} /> {vehicle.range}</span>
+                  <span><Zap size={15} /> Elétrico / híbrido</span>
+                </div>
+                <button onClick={() => toast(`Detalhes do ${vehicle.name} em breve`)}>Saiba mais <ArrowRight size={16} /></button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <BydFooter />
+    </main>
+  );
 }
-function Header() { return <header className="subpage-header"><a href="/" className="subpage-brand"><span className="brand-symbol">✦</span><span className="brand-word">BYD</span></a><nav><a className="active" href="/modelos">Modelos</a><a href="/tecnologia">Tecnologia</a><a href="/ofertas">Ofertas</a><a href="/test-drive">Test Drive</a><a href="/aluguel-byd-mais">Aluguel BYD Mais</a></nav><a className="subpage-menu-link" href="/">Menu</a></header>; }
-function Footer() { return <footer className="subpage-footer"><div className="container subpage-footer-grid"><div className="footer-brand"><span className="brand-symbol">✦</span><span className="brand-word">BYD</span><p>Construa seus sonhos.</p></div><div className="footer-legal"><span>© 2026 BYD Brasil — Todos os direitos reservados.</span><span>Privacidade&nbsp;&nbsp;&nbsp; Termos de uso</span></div></div></footer>; }

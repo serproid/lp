@@ -7,7 +7,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Models from "./pages/Models";
 import Offers from "./pages/Offers";
-import { Subscription, Technology, TestDrive } from "./pages/ServicePages";
+import TestDrive from "./pages/TestDrive";
+import { Subscription, Technology } from "./pages/ServicePages";
 
 function Router() {
   return (

@@ -1,14 +1,77 @@
-import { type FormEvent, type ReactNode } from "react";
-import { ArrowRight, Check, Leaf, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { type ReactNode } from "react";
+import { ArrowRight, Check, Leaf, ShieldCheck, Zap } from "lucide-react";
 import { toast } from "sonner";
+import BydHeader from "@/components/BydHeader";
+import BydFooter from "@/components/BydFooter";
 
-export function Technology() { return <main className="subpage-shell"><Header /><section className="tech-page-hero"><div className="container"><p className="eyebrow light-eyebrow"><span /> Tecnologia BYD</p><h1>Inovação que<br /><em>move o mundo.</em></h1><p>Da bateria Blade à inteligência de bordo, criamos tecnologias para transformar a maneira como você se move.</p></div></section><section className="technology-pillars container"><div className="subpage-title"><div><p className="eyebrow"><span /> O jeito BYD</p><h2>Mais que<br /><em>um carro.</em></h2></div><p>Um ecossistema completo de soluções para uma vida mais conectada, segura e sustentável.</p></div><div className="pillar-grid"><Pillar icon={<Zap />} title="Energia inteligente" text="Baterias desenvolvidas para entregar performance, autonomia e tranquilidade." /><Pillar icon={<ShieldCheck />} title="Segurança avançada" text="Estruturas e sistemas que cuidam de você em todos os caminhos." /><Pillar icon={<Leaf />} title="Um futuro mais limpo" text="Tecnologia pensada para reduzir o impacto e ampliar as possibilidades." /></div></section><Footer /></main>; }
-function Pillar({ icon, title, text }: { icon: ReactNode; title: string; text: string }) { return <article className="pillar-card"><span>{icon}</span><h3>{title}</h3><p>{text}</p><a href="/" onClick={(event) => { event.preventDefault(); toast("Conteúdo em breve"); }}>Saiba mais <ArrowRight size={15} /></a></article>; }
+export function Technology() {
+  return (
+    <main className="site-shell byd-home subpage-shell">
+      <BydHeader />
+      <section className="tech-page-hero">
+        <div className="container">
+          <p className="eyebrow light-eyebrow"><span /> Tecnologia BYD</p>
+          <h1>Inovação que<br /><em>move o mundo.</em></h1>
+          <p>Da bateria Blade à inteligência de bordo, criamos tecnologias para transformar a maneira como você se move.</p>
+        </div>
+      </section>
+      <section className="technology-pillars container">
+        <div className="subpage-title">
+          <div><p className="eyebrow"><span /> O jeito BYD</p><h2>Mais que<br /><em>um carro.</em></h2></div>
+          <p>Um ecossistema completo de soluções para uma vida mais conectada, segura e sustentável.</p>
+        </div>
+        <div className="pillar-grid">
+          <Pillar icon={<Zap />} title="Energia inteligente" text="Baterias desenvolvidas para entregar performance, autonomia e tranquilidade." />
+          <Pillar icon={<ShieldCheck />} title="Segurança avançada" text="Estruturas e sistemas que cuidam de você em todos os caminhos." />
+          <Pillar icon={<Leaf />} title="Um futuro mais limpo" text="Tecnologia pensada para reduzir o impacto e ampliar as possibilidades." />
+        </div>
+      </section>
+      <BydFooter />
+    </main>
+  );
+}
 
-export function TestDrive() { const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); toast("Solicitação enviada. Uma concessionária entrará em contato."); event.currentTarget.reset(); }; return <main className="subpage-shell"><Header /><section className="form-page-hero"><div className="container"><p className="eyebrow light-eyebrow"><span /> Viva a experiência</p><h1>Seu próximo BYD<br /><em>começa aqui.</em></h1></div></section><section className="form-page-section container"><div><p className="eyebrow"><span /> Test Drive</p><h2>Sinta a diferença<br /><em>na prática.</em></h2><p>Agende uma experiência e descubra como é dirigir a nova geração de veículos elétricos.</p></div><LeadForm /></section><Footer /></main>; }
+function Pillar({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <article className="pillar-card">
+      <span>{icon}</span>
+      <h3>{title}</h3>
+      <p>{text}</p>
+      <a href="/" onClick={(event) => { event.preventDefault(); toast("Conteúdo em breve"); }}>Saiba mais <ArrowRight size={15} /></a>
+    </article>
+  );
+}
 
-export function Subscription() { return <main className="subpage-shell"><Header /><section className="subscription-hero"><div className="container"><p className="eyebrow light-eyebrow"><span /> Mobilidade do seu jeito</p><h1>Aluguel BYD<br /><em>Mais.</em></h1><p>Tenha um BYD na sua garagem com a liberdade e a praticidade de uma assinatura.</p></div></section><section className="subscription-section container"><div><p className="eyebrow"><span /> Como funciona</p><h2>Mais liberdade.<br /><em>Menos preocupação.</em></h2></div><div className="subscription-steps"><Step number="01" title="Escolha seu modelo" text="Encontre o BYD que combina com a sua rotina." /><Step number="02" title="Defina seu plano" text="Assine pelo período que fizer sentido para você." /><Step number="03" title="Viva a experiência" text="Receba, dirija e aproveite. A gente cuida do resto." /></div></section><Footer /></main>; }
-function Step({ number, title, text }: { number: string; title: string; text: string }) { return <div className="subscription-step"><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div><Check size={18} /></div>; }
-function LeadForm() { return <form className="lead-form" onSubmit={(event) => { event.preventDefault(); toast("Solicitação enviada com sucesso."); event.currentTarget.reset(); }}><label>Nome<input required placeholder="Seu nome" /></label><label>E-mail<input type="email" required placeholder="voce@email.com" /></label><label>Telefone<input required placeholder="(00) 00000-0000" /></label><label>Modelo de interesse<select defaultValue=""><option value="" disabled>Selecione um modelo</option><option>BYD Song Pro</option><option>BYD Sealion 7</option><option>BYD Dolphin</option><option>BYD Shark</option></select></label><button className="button button-dark">Agendar test drive <ArrowRight size={16} /></button></form>; }
-function Header() { return <header className="subpage-header"><a href="/" className="subpage-brand"><span className="brand-symbol">✦</span><span className="brand-word">BYD</span></a><nav><a href="/modelos">Modelos</a><a href="/tecnologia">Tecnologia</a><a href="/ofertas">Ofertas</a><a className="active" href="/test-drive">Test Drive</a><a href="/aluguel-byd-mais">Aluguel BYD Mais</a></nav><a className="subpage-menu-link" href="/">Menu</a></header>; }
-function Footer() { return <footer className="subpage-footer"><div className="container subpage-footer-grid"><div className="footer-brand"><span className="brand-symbol">✦</span><span className="brand-word">BYD</span><p>Construa seus sonhos.</p></div><div className="footer-legal"><span>© 2026 BYD Brasil — Todos os direitos reservados.</span><span>Privacidade&nbsp;&nbsp;&nbsp; Termos de uso</span></div></div></footer>; }
+export function Subscription() {
+  return (
+    <main className="site-shell byd-home subpage-shell">
+      <BydHeader />
+      <section className="subscription-hero">
+        <div className="container">
+          <p className="eyebrow light-eyebrow"><span /> Mobilidade do seu jeito</p>
+          <h1>Aluguel BYD<br /><em>Mais.</em></h1>
+          <p>Tenha um BYD na sua garagem com a liberdade e a praticidade de uma assinatura.</p>
+        </div>
+      </section>
+      <section className="subscription-section container">
+        <div><p className="eyebrow"><span /> Como funciona</p><h2>Mais liberdade.<br /><em>Menos preocupação.</em></h2></div>
+        <div className="subscription-steps">
+          <Step number="01" title="Escolha seu modelo" text="Encontre o BYD que combina com a sua rotina." />
+          <Step number="02" title="Defina seu plano" text="Assine pelo período que fizer sentido para você." />
+          <Step number="03" title="Viva a experiência" text="Receba, dirija e aproveite. A gente cuida do resto." />
+        </div>
+      </section>
+      <BydFooter />
+    </main>
+  );
+}
+
+function Step({ number, title, text }: { number: string; title: string; text: string }) {
+  return (
+    <div className="subscription-step">
+      <span>{number}</span>
+      <div><h3>{title}</h3><p>{text}</p></div>
+      <Check size={18} />
+    </div>
+  );
+}
