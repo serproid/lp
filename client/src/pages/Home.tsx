@@ -117,6 +117,15 @@ const modelsMenu = {
   ],
 } as const;
 
+const techMenu = [
+  { name: "BYD Super DM", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/Super_DM-i-1.jpg" },
+  { name: "O que é NEV?", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/e-platform_3_02.jpg" },
+  { name: "BYD e-Plataform 3.0", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/BYD-e-platform-3-nav3.png" },
+  { name: "BYD Bateria Blade", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/Blade_battery-1.jpg" },
+  { name: "BYD DiSus", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/e4-platform-1.png" },
+  { name: "BYD Cell to Body", href: "/tecnologia", image: "https://www.byd.com/material/byd-site/br/tecnologia/ICON_CTB-byd2.jpg" },
+];
+
 const menuColumns = [
   {
     title: "Descubra a BYD",
@@ -192,6 +201,8 @@ export default function Home() {
   const [modelsOpen, setModelsOpen] = useState(false);
   const [modelsTab, setModelsTab] = useState<"electric" | "hybrid">("electric");
   const modelsCloseTimer = useRef<number | null>(null);
+  const [techOpen, setTechOpen] = useState(false);
+  const techCloseTimer = useRef<number | null>(null);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -219,11 +230,23 @@ export default function Home() {
 
   const openModels = () => {
     if (modelsCloseTimer.current) window.clearTimeout(modelsCloseTimer.current);
+    if (techCloseTimer.current) window.clearTimeout(techCloseTimer.current);
+    setTechOpen(false);
     setModelsOpen(true);
   };
   const closeModels = () => {
     if (modelsCloseTimer.current) window.clearTimeout(modelsCloseTimer.current);
     modelsCloseTimer.current = window.setTimeout(() => setModelsOpen(false), 140);
+  };
+  const openTech = () => {
+    if (techCloseTimer.current) window.clearTimeout(techCloseTimer.current);
+    if (modelsCloseTimer.current) window.clearTimeout(modelsCloseTimer.current);
+    setModelsOpen(false);
+    setTechOpen(true);
+  };
+  const closeTech = () => {
+    if (techCloseTimer.current) window.clearTimeout(techCloseTimer.current);
+    techCloseTimer.current = window.setTimeout(() => setTechOpen(false), 140);
   };
 
   return (
@@ -245,7 +268,13 @@ export default function Home() {
               onMouseEnter={openModels}
               onMouseLeave={closeModels}
               onFocus={openModels}
-            >Modelos</a><a href="#technology">Tecnologia</a><a href="/ofertas">Ofertas</a><a href="/test-drive">Test Drive</a><a href="/aluguel-byd-mais">Aluguel BYD Mais</a>
+            >Modelos</a><a
+              href="#technology"
+              className={`byd-nav-tech ${techOpen ? "is-open" : ""}`}
+              onMouseEnter={openTech}
+              onMouseLeave={closeTech}
+              onFocus={openTech}
+            >Tecnologia</a><a href="/ofertas">Ofertas</a><a href="/test-drive">Test Drive</a><a href="/aluguel-byd-mais">Aluguel BYD Mais</a>
           </nav>
           <div className="byd-main-actions">
             <button className="byd-menu-word" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? "Fechar" : "Menu"}</button>
@@ -292,6 +321,30 @@ export default function Home() {
                     <a href={car.href}>Saiba mais</a>
                     <a href="/test-drive">Test drive</a>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {techOpen && (
+        <div
+          className={`byd-tech-menu ${utilityHidden ? "is-utility-hidden" : ""}`}
+          onMouseEnter={openTech}
+          onMouseLeave={closeTech}
+          role="dialog"
+          aria-label="Tecnologia BYD"
+        >
+          <div className="byd-tech-menu-inner">
+            <div className="byd-tech-grid">
+              {techMenu.map((item) => (
+                <div className="byd-tech-card" key={item.name}>
+                  <h3>{item.name}</h3>
+                  <a className="byd-tech-card-image" href={item.href}>
+                    <img src={item.image} alt={item.name} loading="lazy" />
+                  </a>
+                  <a className="byd-tech-card-link" href={item.href}>Saiba mais <LongArrow size={13} /></a>
                 </div>
               ))}
             </div>

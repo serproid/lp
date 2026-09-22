@@ -386,6 +386,24 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 @media (max-width: 860px) {
   .byd-models-menu { display: none; }
 }
+.byd-nav-tech { cursor: pointer; }
+.byd-nav-tech.is-open { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 7px; }
+.byd-tech-menu { position: fixed; inset: 105px 0 auto; z-index: 27; background: #fff; border-top: 1px solid #ececec; box-shadow: 0 18px 35px rgba(0,0,0,.12); max-height: calc(100svh - 105px); overflow-y: auto; }
+.byd-tech-menu-inner { max-width: 1440px; margin: 0 auto; padding: 55px 72px 72px; }
+.byd-tech-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 70px 60px; max-width: 1280px; }
+.byd-tech-card { display: flex; flex-direction: column; align-items: flex-start; }
+.byd-tech-card h3 { margin: 0 0 8px; color: #202020; font-size: 15px; font-weight: 700; }
+.byd-tech-card-image { display: block; width: 100%; }
+.byd-tech-card-image img { display: block; width: 100%; height: 175px; object-fit: contain; }
+.byd-tech-card-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; color: #555; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+.byd-tech-card-link:hover { color: #c7192e; }
+@media (max-width: 1024px) {
+  .byd-tech-menu-inner { padding: 36px 32px 48px; }
+  .byd-tech-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 28px; }
+}
+@media (max-width: 860px) {
+  .byd-tech-menu { display: none; }
+}
 .byd-hero { position: relative; min-height: 660px; height: calc(100vh - 72px); max-height: 860px; color: #fff; background-color: #253036; background-position: center; background-size: cover; isolation: isolate; transition: background-image .35s ease; }
 .byd-hero-overlay { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(0,0,0,.63), rgba(0,0,0,.1) 68%), linear-gradient(0deg, rgba(0,0,0,.42), transparent 40%); }
 .byd-hero-content { position: relative; height: 100%; padding-top: 105px; padding-bottom: 45px; display: flex; flex-direction: column; justify-content: space-between; }
@@ -633,6 +651,7 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-menu-panel { transition: top .28s var(--ease-out); }
 .byd-menu-panel.is-utility-hidden { top: 68px; }
 .byd-models-menu.is-utility-hidden { top: 68px; }
+.byd-tech-menu.is-utility-hidden { top: 68px; }
 @media (max-width: 860px) {
   .byd-header.is-utility-hidden { height: 46px; }
   .byd-menu-panel.is-utility-hidden { top: 46px; }
