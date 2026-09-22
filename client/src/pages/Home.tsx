@@ -226,7 +226,7 @@ export default function Home() {
           </div>
         </div>
         <div className="byd-main-bar">
-          <a className="brand-mark byd-logo" href="#top" aria-label="BYD Brasil"><img src="/manus-storage/byd-header-logo_57003a69.png" alt="BYD" /></a>
+          <a className="brand-mark byd-logo" href="#top" aria-label="BYD Brasil"><img src="https://www.byd.com/material/byd-site/br/public-icon/logo-old.svg" alt="BYD" /></a>
           <nav className="desktop-nav byd-primary-nav" aria-label="Navegação principal">
             <a
               href="#models"
