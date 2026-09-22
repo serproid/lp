@@ -125,7 +125,7 @@ export default function Offers() {
                     <button type="button" onClick={() => toast(`Condições do ${offer.model} em breve.`)}>Consulte condições</button>
                   </div>
                   <div className="byd-offer-actions">
-                    <a className="byd-offer-btn" href="/test-drive">Estou interessado</a>
+                    <a className="byd-offer-btn" href={`/simulacao?modelo=${encodeURIComponent(`${offer.model} ${offer.year}`)}`}>Estou interessado</a>
                     <a className="byd-offer-whatsapp" href="https://wa.me/551140028922" target="_blank" rel="noreferrer" aria-label={`WhatsApp ${offer.model}`}><WhatsAppIcon /></a>
                   </div>
                 </div>
