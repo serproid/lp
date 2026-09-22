@@ -135,7 +135,10 @@ export default function Offers() {
 
       <section className="byd-offer-banner">
         <a href="/test-drive" aria-label="Ofertas BYD">
-          <img src="https://www.byd.com/material/__CN/byd-site/br/offer-model/ofertas-jul-2026.desk.webp" alt="Ofertas BYD" />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="https://www.byd.com/material/__CN/byd-site/br/offer-model/ofertas-jul-2026-mob.webp" />
+            <img src="https://www.byd.com/material/__CN/byd-site/br/offer-model/ofertas-jul-2026.desk.webp" alt="Ofertas BYD" />
+          </picture>
         </a>
       </section>
 
