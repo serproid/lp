@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
 import LongArrow from "@/components/LongArrow";
 
-const heroSlides = [
+type HeroSlide = {
+  name: string;
+  eyebrow: string;
+  image: string;
+  mobileImage?: string;
+  href: string;
+  campaign?: boolean;
+  video?: string;
+};
+
+const heroSlides: HeroSlide[] = [
   {
     name: "BYD SONG PRO DM-i FLEX",
     eyebrow: "O SUV híbrido plug-in que combina liberdade e eficiência",
@@ -18,6 +28,8 @@ const heroSlides = [
     eyebrow: "Tecnologia híbrida para todos os caminhos",
     image:
       "https://www.byd.com/material/byd-site/br/product/atto-2-dmi/kv-banner-home-pc2.webp",
+    mobileImage:
+      "https://www.byd.com/material/byd-site/br/product/atto-2-dmi/kv-banner-home-mob4.webp",
     href: "/modelos",
     campaign: false,
   },
@@ -60,10 +72,30 @@ const fallbackImages = {
   greenFuture: "/futuro-verde.jpg",
 };
 
+function useMobileHero() {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 860px)").matches,
+  );
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 860px)");
+    const onChange = () => setIsMobile(mql.matches);
+    if (mql.addEventListener) mql.addEventListener("change", onChange);
+    else mql.addListener(onChange);
+    setIsMobile(mql.matches);
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener("change", onChange);
+      else mql.removeListener(onChange);
+    };
+  }, []);
+  return isMobile;
+}
+
 export default function Home() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const isMobile = useMobileHero();
 
   const slide = heroSlides[activeSlide];
+  const heroImage = isMobile && slide.mobileImage ? slide.mobileImage : slide.image;
   const nextSlide = () => setActiveSlide((current) => (current + 1) % heroSlides.length);
   const previousSlide = () =>
     setActiveSlide((current) => (current + heroSlides.length - 1) % heroSlides.length);
@@ -72,7 +104,7 @@ export default function Home() {
     <main className="site-shell byd-home">
       <BydHeader isHome />
 
-      <section id="top" className={`byd-hero ${slide.campaign ? "has-campaign-art" : ""} ${slide.video ? "has-video" : ""}`} style={{ backgroundImage: `url(${slide.image})` }}>
+      <section id="top" className={`byd-hero ${slide.campaign ? "has-campaign-art" : ""} ${slide.video ? "has-video" : ""}`} style={{ backgroundImage: `url(${heroImage})` }}>
         {slide.video && <video className="byd-hero-video" src={slide.video} autoPlay muted loop playsInline preload="auto" aria-label="Vídeo manifesto BYD" />}
         <div className="byd-hero-overlay" />
         <div className="container byd-hero-content">
