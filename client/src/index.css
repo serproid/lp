@@ -426,10 +426,10 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-button-ghost:hover { background: #fff; color: #222; }
 .byd-button-dark { background: #222; color: #fff; }
 .byd-button-dark:hover { background: #c7192e; }
-.byd-hero-controls { display: flex; align-items: center; gap: 15px; width: 270px; }
-.byd-hero-controls button { display: grid; place-items: center; width: 32px; height: 32px; color: #fff; border: 1px solid rgba(255,255,255,.55); cursor: pointer; }
+.byd-hero-controls { position: absolute; top: 50%; right: 28px; left: 28px; z-index: 3; display: flex; align-items: center; justify-content: space-between; width: auto; transform: translateY(-50%); }
+.byd-hero-controls button { display: grid; place-items: center; width: 44px; height: 44px; color: #fff; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; background: rgba(0,0,0,.14); cursor: pointer; transition: background .18s ease, color .18s ease, border-color .18s ease; }
 .byd-hero-controls button:hover { background: #fff; color: #222; }
-.byd-slider-progress { width: 150px; height: 1px; background: rgba(255,255,255,.42); }
+.byd-slider-progress { display: none; }
 .byd-slider-progress span { display: block; height: 1px; background: #fff; transition: width .25s ease; }
 .byd-models-section { padding: 80px 0 96px; background: #fff; }
 .byd-section-title { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 42px; }
@@ -569,7 +569,7 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-main-icon:hover { color: #d8d8d8; }
 .byd-mobile-search { display: none; place-items: center; color: #fff; cursor: pointer; }
 .byd-mobile-search:hover { color: #d8d8d8; }
-.byd-menu-toggle { display: none; color: #fff; cursor: pointer; }
+.byd-menu-toggle { display: none; place-items: center; color: #fff; cursor: pointer; }
 .byd-menu-panel { inset: 105px 0 auto; }
 .byd-hero { height: calc(100vh - 105px); min-height: 620px; }
 
@@ -591,14 +591,15 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
   .byd-menu-toggle { display: grid; }
 }
 @media (max-width: 860px) {
-  .byd-header { height: 76px; }
+  .byd-header { height: 76px; padding: 0; }
   .byd-utility-bar { display: none; }
   .byd-main-bar { height: 76px; padding: 0 20px; }
   .byd-logo .brand-word { font-size: 25px; }
   .byd-primary-nav, .byd-menu-word, .byd-main-utility, .byd-main-icon { display: none; }
   .byd-mobile-search { display: grid; }
-  .byd-main-actions { gap: 0; }
+  .byd-main-actions { gap: 16px; }
   .byd-menu-toggle { display: grid; }
+  .byd-mobile-search, .byd-menu-toggle { min-width: 44px; min-height: 44px; }
   .byd-menu-panel { inset: 76px 0 auto; }
   .byd-hero { height: calc(100vh - 76px); min-height: 590px; }
 }
@@ -615,18 +616,13 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 
 
 /* Full-bleed campaign carousel slide */
-.byd-hero.has-campaign-art { min-height: 0; height: 100vh; height: 100svh; max-height: none; background-position: center 48px; background-size: cover; }
+.byd-hero.has-campaign-art { min-height: 0; height: 100vh; height: 100svh; max-height: none; background-position: center; background-size: cover; }
 .byd-hero.has-campaign-art .byd-hero-overlay { background: transparent; }
 .byd-hero.has-campaign-art .byd-hero-content { padding-top: 0; padding-bottom: 0; }
 .byd-hero.has-campaign-art .byd-overline,
 .byd-hero.has-campaign-art .byd-hero-copy { display: none; }
-.byd-hero.has-campaign-art .byd-hero-controls { position: absolute; top: 50%; right: 28px; left: 28px; z-index: 2; width: auto; justify-content: space-between; transform: translateY(-50%); }
-.byd-hero.has-campaign-art .byd-hero-controls button { width: 36px; height: 36px; border-color: rgba(255,255,255,.8); border-radius: 50%; background: rgba(0,0,0,.06); }
-.byd-hero.has-campaign-art .byd-hero-controls button:hover { background: rgba(0,0,0,.3); color: #fff; }
-.byd-hero.has-campaign-art .byd-slider-progress { display: none; }
 @media (max-width: 860px) {
-  .byd-hero.has-campaign-art { height: 100vh; height: 100svh; min-height: 0; max-height: none; background-position: center 26px; }
-  .byd-hero.has-campaign-art .byd-hero-controls { right: 16px; left: 16px; }
+  .byd-hero.has-campaign-art { height: 100vh; height: 100svh; min-height: 0; max-height: none; background-position: center; }
 }
 
 
@@ -636,12 +632,9 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-hero.has-video .byd-hero-overlay { z-index: -1; background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,.04) 72%), linear-gradient(0deg, rgba(0,0,0,.2), transparent 48%); }
 .byd-hero.has-video .byd-hero-copy { display: none; }
 .byd-hero.has-video .byd-overline { position: relative; z-index: 1; text-shadow: 0 1px 5px rgba(0,0,0,.55); }
-.byd-hero.has-video .byd-hero-controls { position: relative; z-index: 2; }
 @media (max-width: 860px) {
   .byd-hero.has-video { height: 100vh; height: 100svh; min-height: 0; max-height: none; }
   .byd-hero.has-video .byd-hero-content { padding-top: 76px; padding-bottom: 18px; }
-  .byd-hero.has-video .byd-hero-controls { position: absolute; right: 16px; bottom: 18px; left: 16px; width: auto; justify-content: space-between; }
-  .byd-hero.has-video .byd-slider-progress { display: none; }
 }
 
 
@@ -649,6 +642,7 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-hero { height: 100vh; height: 100svh; min-height: 0; max-height: none; }
 @media (max-width: 860px) {
   .byd-hero { height: 100vh; height: 100svh; min-height: 0; max-height: none; }
+  .byd-hero-controls { right: 16px; left: 16px; }
 }
 
 
@@ -986,4 +980,14 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
   .byd-admin-filter { width: auto; min-width: 200px; }
   .byd-admin-lead-grid { grid-template-columns: repeat(3, 1fr); }
   .byd-admin-lead-card > footer a, .byd-admin-lead-card > footer button, .byd-admin-lead-card > footer select { flex: 0 0 auto; }
+}
+
+
+/* Mobile touch targets & spacing */
+@media (max-width: 860px) {
+  .byd-menu-column a { min-height: 44px; }
+  .byd-footer-group ul { gap: 18px; }
+  .byd-footer-group a { display: inline-block; padding: 6px 0; }
+  .byd-offer-filter-input { padding: 14px 0; }
+  .byd-offer-validity button { min-height: 44px; }
 }
