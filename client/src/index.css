@@ -567,6 +567,8 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-main-utility { display: inline-flex; align-items: center; gap: 10px; }
 .byd-main-icon { display: grid; place-items: center; cursor: pointer; }
 .byd-main-icon:hover { color: #d8d8d8; }
+.byd-mobile-search { display: none; place-items: center; color: #fff; cursor: pointer; }
+.byd-mobile-search:hover { color: #d8d8d8; }
 .byd-menu-toggle { display: none; color: #fff; cursor: pointer; }
 .byd-menu-panel { inset: 105px 0 auto; }
 .byd-hero { height: calc(100vh - 105px); min-height: 620px; }
@@ -590,19 +592,17 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 }
 @media (max-width: 860px) {
   .byd-header { height: 76px; }
-  .byd-utility-bar { height: 30px; }
-  .byd-utility-inner { padding: 0 18px; }
-  .byd-main-bar { height: 46px; padding: 0 20px; }
+  .byd-utility-bar { display: none; }
+  .byd-main-bar { height: 76px; padding: 0 20px; }
   .byd-logo .brand-word { font-size: 25px; }
   .byd-primary-nav, .byd-menu-word, .byd-main-utility, .byd-main-icon { display: none; }
+  .byd-mobile-search { display: grid; }
   .byd-main-actions { gap: 0; }
   .byd-menu-toggle { display: grid; }
   .byd-menu-panel { inset: 76px 0 auto; }
   .byd-hero { height: calc(100vh - 76px); min-height: 590px; }
 }
 @media (max-width: 500px) {
-  .byd-utility-inner { gap: 13px; }
-  .byd-utility-inner button { font-size: 11px; }
   .byd-main-bar { padding: 0 16px; }
   .byd-hero-content { padding-top: 76px; }
 }
@@ -662,10 +662,10 @@ h3 { margin-bottom: 10px; font-size: clamp(54px, 6vw, 84px); line-height: .82; }
 .byd-models-menu.is-utility-hidden { top: 68px; }
 .byd-tech-menu.is-utility-hidden { top: 68px; }
 @media (max-width: 860px) {
-  .byd-header.is-utility-hidden { height: 46px; }
-  .byd-menu-panel.is-utility-hidden { top: 46px; }
+  .byd-header.is-utility-hidden { height: 76px; }
+  .byd-menu-panel.is-utility-hidden { top: 76px; }
   .byd-menu-panel { max-height: calc(100vh - 76px); }
-  .byd-menu-panel.is-utility-hidden { max-height: calc(100vh - 46px); }
+  .byd-menu-panel.is-utility-hidden { max-height: calc(100vh - 76px); }
 }
 
 

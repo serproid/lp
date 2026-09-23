@@ -142,6 +142,7 @@ export default function BydHeader({ isHome = false }: { isHome?: boolean }) {
             <a className="byd-main-utility" href={isHome ? "#dealers" : "/"}><MapPin size={18} /> Concessionários</a>
             <button className="byd-main-icon" aria-label="Minha conta" onClick={() => showSoon("Área do cliente em breve.")}><UserRound size={20} /></button>
             <button className="byd-main-icon" aria-label="Idioma" onClick={() => showSoon("Seletor de idioma em breve.")}><Globe2 size={21} /></button>
+            <button className="byd-mobile-search" aria-label="Buscar" onClick={() => showSoon("A busca será disponibilizada em breve.")}><Search size={20} /></button>
             <button className="menu-toggle byd-menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}>{menuOpen ? <X size={24} /> : <Menu size={24} />}</button>
           </div>
         </div>
