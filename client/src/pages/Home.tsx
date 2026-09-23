@@ -20,6 +20,8 @@ const heroSlides: HeroSlide[] = [
     eyebrow: "O SUV híbrido plug-in que combina liberdade e eficiência",
     image:
       "https://www.byd.com/material/__CN/byd-site/br/home/home-2026/kv-banner-home-campanha-DESK.webp",
+    mobileImage:
+      "https://www.byd.com/material/byd-site/br/home/home-2026/MOB_HOME_FINAL_BEDB.webp",
     href: "/modelos",
     campaign: true,
   },
@@ -48,6 +50,8 @@ const heroSlides: HeroSlide[] = [
     eyebrow: "Potência, design e inovação em movimento",
     image:
       "https://www.byd.com/material/byd-site/br/product/atto-2-dmi/kv-banner-home-pc2.webp",
+    mobileImage:
+      "https://www.byd.com/material/__CN/byd-site/br/home/home-2026/byd-promocao-vendas-2026-mob-2.webp",
     href: "/modelos",
     campaign: false,
   },
