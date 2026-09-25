@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
+import { trackLead } from "@/lib/metaPixel";
 
 const models = [
   "BYD DOLPHIN MINI", "BYD DOLPHIN", "BYD DOLPHIN PLUS", "BYD DOLPHIN SE", "BYD HAN", "BYD SEAL",
@@ -33,6 +34,7 @@ export default function TestDrive() {
       return;
     }
     toast("Solicitação enviada. Um especialista BYD entrará em contato.");
+    trackLead({ content_name: model });
     event.currentTarget.reset();
     setModel("");
     setTaxType("CPF");
