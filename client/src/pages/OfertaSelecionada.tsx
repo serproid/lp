@@ -116,12 +116,23 @@ export default function OfertaSelecionada() {
         cep: cep || null,
         details: details.trim() || null,
       });
-      trackLead({
-        content_name: title,
-        content_ids: offer ? [offer.id] : undefined,
-        value: por ?? undefined,
-        currency: "BRL",
-      });
+      trackLead(
+        {
+          content_name: title,
+          content_ids: offer ? [offer.id] : undefined,
+          value: por ?? undefined,
+          currency: "BRL",
+        },
+        {
+          email,
+          phone: `+55${ddd}${phone.replace(/\D/g, "")}`,
+          firstName,
+          lastName,
+          city,
+          state,
+          zip: cep,
+        },
+      );
       setSent(true);
     } catch (error) {
       toast(`Erro ao enviar: ${errorMessage(error)}`);

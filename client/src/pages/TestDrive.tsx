@@ -51,7 +51,16 @@ export default function TestDrive() {
         cep: String(data.get("cep") ?? "").trim() || null,
         details: [String(data.get("details") ?? "").trim(), dealer ? `Concessionária: ${dealer}` : ""].filter(Boolean).join(" | ") || null,
       });
-      trackLead({ content_name: model });
+      trackLead(
+        { content_name: model },
+        {
+          email: String(data.get("email") ?? ""),
+          phone: `+55${ddd}${String(data.get("phone") ?? "").replace(/\D/g, "")}`,
+          firstName: String(data.get("firstName") ?? ""),
+          lastName: String(data.get("lastName") ?? ""),
+          zip: String(data.get("cep") ?? ""),
+        },
+      );
       toast("Solicitação enviada. Um especialista BYD entrará em contato.");
       form.reset();
       setModel("");
