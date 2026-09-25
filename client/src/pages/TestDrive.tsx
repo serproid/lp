@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import BydHeader from "@/components/BydHeader";
 import BydFooter from "@/components/BydFooter";
+import { submitLead } from "@/lib/leadStore";
 import { trackLead } from "@/lib/metaPixel";
 
 const models = [
@@ -26,21 +28,42 @@ export default function TestDrive() {
   const [ddd, setDdd] = useState("");
   const [dealer, setDealer] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!accepted) {
       toast("Aceite os Termos de Uso e a Política de Privacidade.");
       return;
     }
-    toast("Solicitação enviada. Um especialista BYD entrará em contato.");
-    trackLead({ content_name: model });
-    event.currentTarget.reset();
-    setModel("");
-    setTaxType("CPF");
-    setDdd("");
-    setDealer("");
-    setAccepted(false);
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setSubmitting(true);
+    try {
+      await submitLead({
+        model: model || null,
+        firstName: String(data.get("firstName") ?? "").trim(),
+        lastName: String(data.get("lastName") ?? "").trim(),
+        phone: `+55 (${ddd}) ${String(data.get("phone") ?? "").replace(/\D/g, "")}`,
+        email: String(data.get("email") ?? "").trim(),
+        personType: taxType === "CNPJ" ? "juridica" : "fisica",
+        document: String(data.get("document") ?? "").trim(),
+        cep: String(data.get("cep") ?? "").trim() || null,
+        details: [String(data.get("details") ?? "").trim(), dealer ? `Concessionária: ${dealer}` : ""].filter(Boolean).join(" | ") || null,
+      });
+      trackLead({ content_name: model });
+      toast("Solicitação enviada. Um especialista BYD entrará em contato.");
+      form.reset();
+      setModel("");
+      setTaxType("CPF");
+      setDdd("");
+      setDealer("");
+      setAccepted(false);
+    } catch (error) {
+      toast(`Erro ao enviar: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -69,11 +92,11 @@ export default function TestDrive() {
           <div className="byd-td-row">
             <div className="byd-td-field">
               <label htmlFor="td-first">Nome*</label>
-              <input id="td-first" required placeholder="Nome*" maxLength={64} />
+              <input id="td-first" name="firstName" required placeholder="Nome*" maxLength={64} />
             </div>
             <div className="byd-td-field">
               <label htmlFor="td-last">Sobrenome*</label>
-              <input id="td-last" required placeholder="Sobrenome*" maxLength={64} />
+              <input id="td-last" name="lastName" required placeholder="Sobrenome*" maxLength={64} />
             </div>
           </div>
 
@@ -87,7 +110,7 @@ export default function TestDrive() {
             </div>
             <div className="byd-td-field">
               <label htmlFor="td-tax">{taxType}*</label>
-              <input id="td-tax" required placeholder={taxType === "CPF" ? "xxx.xxx.xxx-xx" : "xx.xxx.xxx/xxxx-xx"} maxLength={20} />
+              <input id="td-tax" name="document" required placeholder={taxType === "CPF" ? "xxx.xxx.xxx-xx" : "xx.xxx.xxx/xxxx-xx"} maxLength={20} />
             </div>
           </div>
 
@@ -99,18 +122,18 @@ export default function TestDrive() {
                 <option value="" disabled>DDD</option>
                 {dddOptions.map((code) => <option key={code}>{code}</option>)}
               </select>
-              <input required placeholder="99999-9999*" maxLength={20} />
+              <input name="phone" required placeholder="99999-9999*" maxLength={20} />
             </div>
           </div>
 
           <div className="byd-td-field">
             <label htmlFor="td-email">E-mail*</label>
-            <input id="td-email" type="email" required placeholder="voce@email.com" maxLength={64} />
+            <input id="td-email" name="email" type="email" required placeholder="voce@email.com" maxLength={64} />
           </div>
 
           <div className="byd-td-field">
             <label htmlFor="td-cep">CEP*</label>
-            <input id="td-cep" required placeholder="Insira seu CEP*" maxLength={9} />
+            <input id="td-cep" name="cep" required placeholder="Insira seu CEP*" maxLength={9} />
           </div>
 
           <div className="byd-td-field">
@@ -123,7 +146,7 @@ export default function TestDrive() {
 
           <div className="byd-td-field">
             <label htmlFor="td-question">Observações</label>
-            <textarea id="td-question" rows={4} maxLength={200} placeholder="Conte-nos mais sobre o seu interesse" />
+            <textarea id="td-question" name="details" rows={4} maxLength={200} placeholder="Conte-nos mais sobre o seu interesse" />
           </div>
 
           <p className="byd-td-tip">*Informações obrigatórias. Em breve um especialista BYD entrará em contato. Imagens meramente ilustrativas.</p>
@@ -133,7 +156,9 @@ export default function TestDrive() {
             <span>Ao enviar este formulário, eu li e concordei com os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</span>
           </label>
 
-          <button className="byd-td-submit" type="submit">Enviar</button>
+          <button className="byd-td-submit" type="submit" disabled={submitting}>
+            {submitting ? <><Loader2 className="byd-admin-spin" size={15} /> Enviando...</> : "Enviar"}
+          </button>
         </form>
       </section>
 
